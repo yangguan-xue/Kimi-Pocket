@@ -1,3 +1,4 @@
+import { Capacitor } from '@capacitor/core';
 import { extractJwtPayload, isTokenExpired, isTokenNearExpiry } from './jwt';
 import type { GetSubscriptionResponse, GetUsagesResponse, KimiUsageState } from '../types/kimi';
 
@@ -149,13 +150,23 @@ export function normalizeKimiData(
   };
 }
 
+export function getResolvedApiBase(customBase?: string): string {
+  if (customBase) return customBase;
+  // 原生 Android APK 环境下直连 Kimi 官方接口 (由 CapacitorHttp 原生接管，无跨域限制)
+  if (Capacitor.isNativePlatform()) {
+    return 'https://www.kimi.com/apiv2';
+  }
+  return '/apiv2';
+}
+
 /**
  * 核心请求函数：拉取 Kimi 订阅与用量数据
  */
 export async function fetchKimiUsageData(
   token: string,
-  apiBase = '/apiv2'
+  apiBase?: string
 ): Promise<KimiUsageState> {
+  const resolvedBase = getResolvedApiBase(apiBase);
   const cleanToken = token.trim();
   if (!cleanToken) {
     throw new KimiApiError('未配置 Kimi 浏览器 Token', 'AUTH_INVALID');
@@ -182,12 +193,12 @@ export async function fetchKimiUsageData(
 
   try {
     const [subRes, usageRes] = await Promise.all([
-      fetch(`${apiBase}/kimi.gateway.membership.v2.MembershipService/GetSubscription`, {
+      fetch(`${resolvedBase}/kimi.gateway.membership.v2.MembershipService/GetSubscription`, {
         method: 'POST',
         headers,
         body: JSON.stringify({}),
       }),
-      fetch(`${apiBase}/kimi.gateway.billing.v1.BillingService/GetUsages`, {
+      fetch(`${resolvedBase}/kimi.gateway.billing.v1.BillingService/GetUsages`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ scope: ['FEATURE_CODING'] }),

@@ -15,9 +15,11 @@
 | **[Task 04](./phase-3-ui-engine/task-04-landscape-hud.md)** | 构建横屏 StandBy 3 环仪表盘组件 (SVG 4弧 / 7弧 / 连续环) | SPEC-03 | `src/components/landscape/` 及其单测 | ✅ 已验收 (4单测Pass) |
 | **[Task 05](./phase-3-ui-engine/task-05-responsive-shell.md)** | 整合响应式外壳、Token 输入与全局状态生命周期 | SPEC-01, 03 | `src/App.tsx`, `src/hooks/useKimiUsage.ts` | ✅ 已验收 |
 | **[Task 06](./phase-4-android-pwa/task-06-pwa-android.md)** | 配置 Android PWA Web App Manifest、图标与屏幕常亮特性 | SPEC-04 | `manifest.webmanifest`, Service Worker, PWA 图标 | ✅ 已验收 (Build输出SW) |
+| **[Task 07](./phase-4-android-pwa/task-07-capacitor-apk.md)** | 集成 Capacitor 原生 Android 工程与 GitHub Actions 自动打包流水线 | SPEC-05 | `android/`, `build-apk.yml`, `CapacitorHttp` | ✅ 已配置并就绪 |
 
 ---
 
 ## 阶段验收汇总证据 (Evidence)
-- **编译与打包**：`npm run build` 零类型报错，构建成功输出 `dist/`，含 PWA Service Worker。
-- **自动化测试**：`npm test` 全量通过 15 项单元测试（涵盖 JWT 解析、数据归一化映射、竖屏 4/7 段与单条、横屏 4/7 弧与连续环）。
+- **编译与打包**：`npm run build:android` 零类型报错，构建成功输出 `dist/` 并自动同步到 `android/` 原生目录。
+- **自动化测试**：`npm test` 全量通过 18 项单元测试。
+- **CI/CD 流水线**：推送即可由 GitHub 官方云端自动编译出 `Kimi-Pocket-latest.apk`。
