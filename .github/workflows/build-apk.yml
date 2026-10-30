@@ -14,6 +14,9 @@ jobs:
   build-apk:
     name: Build & Package Android APK
     runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
     steps:
       - name: 检出代码
@@ -42,8 +45,9 @@ jobs:
       - name: 编译 Web 前端
         run: npm run build
 
-      - name: 同步前端产物到 Android 原生工程
-        run: npx cap sync android
+      - name: 同步前端静态资源到 Android 工程
+        run: |
+          npx cap copy android || (mkdir -p android/app/src/main/assets/public && cp -r dist/* android/app/src/main/assets/public/)
 
       - name: 赋予 Gradle 执行权限
         run: chmod +x android/gradlew
