@@ -13,8 +13,8 @@ export default defineConfig({
         name: 'Kimi Pocket',
         short_name: 'KimiPocket',
         description: 'Kimi Code 掌上订阅额度与用量监控',
-        theme_color: '#0B0C10',
-        background_color: '#0B0C10',
+        theme_color: '#000000',
+        background_color: '#000000',
         display: 'standalone',
         orientation: 'any',
         icons: [

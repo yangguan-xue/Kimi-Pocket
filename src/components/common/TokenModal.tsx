@@ -26,7 +26,7 @@ export const TokenModal: React.FC<TokenModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-      <div className="bg-[#12141A] border border-white/10 rounded-2xl w-full max-w-md p-5 shadow-2xl text-white">
+      <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl w-full max-w-md p-5 shadow-2xl text-white">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Key className="w-4 h-4 text-emeraldGlow" />

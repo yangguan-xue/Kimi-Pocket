@@ -8,11 +8,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        obsidian: '#0B0C10',
-        cardDark: '#12141A',
-        cardSubtle: '#181B22',
+        obsidian: '#000000', // 纯黑 OLED True Black
+        cardDark: '#0A0A0A', // 中性纯黑微浅，绝无偏蓝
+        cardSubtle: '#121212',
         borderDark: 'rgba(255, 255, 255, 0.08)',
-        cyanGlow: '#00E5FF',
         emeraldGlow: '#10B981',
       },
       fontFamily: {

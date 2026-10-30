@@ -17,7 +17,7 @@ export const App: React.FC = () => {
     manualOverride === 'auto' ? detectedLandscape : manualOverride === 'landscape';
 
   return (
-    <div className="min-h-screen bg-obsidian text-white flex flex-col justify-center items-center p-3 sm:p-6 select-none font-sans">
+    <div className="min-h-screen bg-black text-white flex flex-col justify-center items-center p-3 sm:p-6 select-none font-sans">
       {/* 桌面端模式切换辅助控制栏 */}
       <div className="fixed top-3 right-3 z-40 hidden md:flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full text-xs text-white/70 border border-white/10">
         <span className="text-[11px] text-white/40">视图:</span>
