@@ -31,9 +31,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 自动接受 Android SDK 协议
+      - name: 自动接受 Android SDK 协议并确保 API 35
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0" || true
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 
       - name: 安装 npm 依赖
         run: npm install
@@ -48,9 +50,30 @@ jobs:
         run: chmod +x android/gradlew
 
       - name: 执行 Gradle 编译 Debug APK
+        id: gradle_build
         run: |
           cd android
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --stacktrace --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=512m" 2>&1 | tee ../gradle_output.log
+
+      - name: 收集失败日志并推送到分支 (若失败)
+        if: failure()
+        run: |
+          echo "==================== BUILD FAILURE LOG ===================="
+          tail -n 120 gradle_output.log || true
+          echo "==========================================================="
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -B debug-log || true
+          git add gradle_output.log || true
+          git commit -m "ci: dump gradle error log" || true
+          git push -f origin debug-log || true
+
+      - name: 上传错误日志制品 (若失败)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-failure-log
+          path: gradle_output.log
 
       - name: 整理 APK 文件
         run: |
