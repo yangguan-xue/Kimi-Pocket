@@ -37,6 +37,13 @@ jobs:
       - name: 配置 Gradle 环境与缓存
         uses: gradle/actions/setup-gradle@v4
 
+      - name: 自动接受 Android SDK 协议
+        run: |
+          mkdir -p "$ANDROID_HOME/licenses" || true
+          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
+          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+
       - name: 安装 npm 依赖
         run: |
           npm ci
@@ -47,7 +54,9 @@ jobs:
 
       - name: 同步前端静态资源到 Android 工程
         run: |
-          npx cap copy android || (mkdir -p android/app/src/main/assets/public && cp -r dist/* android/app/src/main/assets/public/)
+          mkdir -p android/app/src/main/assets/public
+          cp -r dist/* android/app/src/main/assets/public/
+          npx cap copy android || true
 
       - name: 赋予 Gradle 执行权限
         run: chmod +x android/gradlew
