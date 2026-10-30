@@ -44,7 +44,7 @@ export const WeeklyQuotaCard: React.FC<WeeklyQuotaCardProps> = ({ data }) => {
         </div>
       </div>
 
-      {/* 严格 7 段分段容器 */}
+      {/* 严格 7 段分段容器：高度为标准的 h-5 (20px) */}
       <div
         data-testid="segment-container-7"
         className="grid grid-cols-7 gap-2 mb-3"
@@ -52,7 +52,7 @@ export const WeeklyQuotaCard: React.FC<WeeklyQuotaCardProps> = ({ data }) => {
         {segments.map((fillRatio, idx) => (
           <div
             key={`seg-7-${idx}`}
-            className="h-4.5 rounded-full bg-white/10 relative overflow-hidden"
+            className="h-5 rounded-full bg-white/10 relative overflow-hidden"
           >
             {fillRatio > 0 && (
               <div
@@ -66,7 +66,7 @@ export const WeeklyQuotaCard: React.FC<WeeklyQuotaCardProps> = ({ data }) => {
 
       <div className="flex justify-between items-center text-xs font-mono">
         <span className="text-white/40">已用 {data.used} / 总额 {data.limit}</span>
-        <span className={theme.textClass}>{data.resetCountdown}重置 (7段)</span>
+        <span className={theme.textClass}>{data.resetCountdown}恢复</span>
       </div>
     </div>
   );

@@ -66,14 +66,16 @@ export const ContinuousRing: React.FC<ContinuousRingProps> = ({
           )}
         </svg>
 
-        {/* 环心数据指标 */}
+        {/* 环心数据指标：极致纯净，大字居中 */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span className={`text-2xl font-bold font-mono tracking-tight ${theme.textClass}`}>
+          <span className={`text-3xl font-bold font-mono tracking-tight ${theme.textClass}`}>
             {valueText}
           </span>
-          <span className="text-[11px] font-mono text-white/50 mt-0.5">
-            {subValueText}
-          </span>
+          {subValueText && (
+            <span className="text-[11px] font-mono text-white/50 mt-0.5">
+              {subValueText}
+            </span>
+          )}
           {theme.level === 'warning' && (
             <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 mt-1">
               不足

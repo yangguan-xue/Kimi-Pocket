@@ -24,9 +24,9 @@ export const LandscapeHUD: React.FC<LandscapeHUDProps> = ({ state }) => {
           ratio={state.totalQuota.usageRatio}
           remaining={state.totalQuota.remaining}
           title="总用量"
-          sublabel="4段阶段"
+          sublabel={state.plan.daysRemaining > 0 ? `${state.plan.daysRemaining}天后到期` : '即将到期'}
           valueText={`${totalPercent}%`}
-          subValueText={`${state.totalQuota.used} / ${state.totalQuota.limit}`}
+          subValueText=""
           testId="ring-total-quota-4"
         />
 
@@ -36,9 +36,9 @@ export const LandscapeHUD: React.FC<LandscapeHUDProps> = ({ state }) => {
           ratio={state.weeklyQuota.usageRatio}
           remaining={state.weeklyQuota.remaining}
           title="周用量"
-          sublabel={`${state.weeklyQuota.resetCountdown}重置 (7段)`}
+          sublabel={`${state.weeklyQuota.resetCountdown}恢复`}
           valueText={`${weeklyPercent}%`}
-          subValueText={`${state.weeklyQuota.used} / ${state.weeklyQuota.limit}`}
+          subValueText=""
           testId="ring-weekly-quota-7"
         />
 
@@ -47,9 +47,9 @@ export const LandscapeHUD: React.FC<LandscapeHUDProps> = ({ state }) => {
           ratio={state.rollingQuota.usageRatio}
           remaining={state.rollingQuota.remaining}
           title="5小时额度"
-          sublabel={`${state.rollingQuota.resetCountdown}重置`}
+          sublabel={`${state.rollingQuota.resetCountdown}恢复`}
           valueText={`${rollingPercent}%`}
-          subValueText={`余 ${state.rollingQuota.remaining} / ${state.rollingQuota.limit}`}
+          subValueText=""
           testId="ring-rolling-quota-smooth"
         />
       </div>

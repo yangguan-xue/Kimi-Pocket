@@ -34,10 +34,10 @@ export const RollingQuotaCard: React.FC<RollingQuotaCardProps> = ({ data }) => {
         </div>
       </div>
 
-      {/* 连续平滑单进度条 (不分段) */}
+      {/* 连续平滑单进度条 (不分段)：高度为标准的 h-5 (20px) */}
       <div
         data-testid="continuous-bar"
-        className="h-4.5 w-full bg-white/10 rounded-full overflow-hidden p-0.5 mb-3"
+        className="h-5 w-full bg-white/10 rounded-full overflow-hidden p-0.5 mb-3"
       >
         <div
           className={`h-full ${theme.bgClass} rounded-full transition-all duration-500 ${theme.glowShadow}`}
@@ -49,7 +49,7 @@ export const RollingQuotaCard: React.FC<RollingQuotaCardProps> = ({ data }) => {
         <span className="text-white/40">
           已用 {data.used} / 总额 {data.limit} (余 {data.remaining})
         </span>
-        <span className={theme.textClass}>{data.resetCountdown}重置</span>
+        <span className={theme.textClass}>{data.resetCountdown}恢复</span>
       </div>
     </div>
   );

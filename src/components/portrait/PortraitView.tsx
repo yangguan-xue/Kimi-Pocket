@@ -14,7 +14,7 @@ export const PortraitView: React.FC<PortraitViewProps> = ({ state }) => {
       data-testid="portrait-view"
       className="flex flex-col gap-4 w-full max-w-md mx-auto flex-1 justify-around py-2"
     >
-      <TotalQuotaCard data={state.totalQuota} />
+      <TotalQuotaCard data={state.totalQuota} daysRemaining={state.plan.daysRemaining} />
       <WeeklyQuotaCard data={state.weeklyQuota} />
       <RollingQuotaCard data={state.rollingQuota} />
     </div>

@@ -17,9 +17,9 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <header className="flex items-center justify-between w-full max-w-4xl mx-auto mb-3 px-3 pt-2">
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center">
         <span
-          className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+          className={`w-2.5 h-2.5 rounded-full mr-2 shrink-0 inline-block ${
             state.meta.loading
               ? 'bg-yellow-400 animate-pulse'
               : isDemo
@@ -27,21 +27,19 @@ export const Header: React.FC<HeaderProps> = ({
               : 'bg-emeraldGlow shadow-[0_0_8px_rgba(16,185,129,0.8)]'
           }`}
         />
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-sm md:text-base font-semibold tracking-tight text-white whitespace-nowrap">
-            Kimi Pocket
+        <span className="text-sm md:text-base font-semibold text-white mr-2 shrink-0 inline-block">
+          Kimi Pocket
+        </span>
+        {state.plan.title && (
+          <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-white/10 text-emeraldGlow border border-emeraldGlow/30 shrink-0 inline-block">
+            {state.plan.title}
           </span>
-          {state.plan.title && (
-            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-white/10 text-emeraldGlow border border-emeraldGlow/30 whitespace-nowrap">
-              {state.plan.title}
-            </span>
-          )}
-          {isDemo && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 whitespace-nowrap">
-              演示
-            </span>
-          )}
-        </div>
+        )}
+        {isDemo && (
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 ml-1.5 shrink-0 inline-block">
+            演示
+          </span>
+        )}
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">

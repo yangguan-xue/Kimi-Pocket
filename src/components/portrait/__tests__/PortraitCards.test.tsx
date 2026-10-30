@@ -34,7 +34,7 @@ describe('Portrait Cards 规范渲染测试', () => {
     expect(container).toBeInTheDocument();
     expect(container.children.length).toBe(7);
     expect(screen.getByText('42%')).toBeInTheDocument();
-    expect(screen.getByText(/3天后重置/)).toBeInTheDocument();
+    expect(screen.getByText(/3天后恢复/)).toBeInTheDocument();
   });
 
   it('5小时额度卡片渲染连续进度条 (非分段)', () => {
@@ -54,6 +54,6 @@ describe('Portrait Cards 规范渲染测试', () => {
     const continuousBar = screen.getByTestId('continuous-bar');
     expect(continuousBar).toBeInTheDocument();
     expect(screen.getByText('30%')).toBeInTheDocument();
-    expect(screen.getByText(/1小时42分后重置/)).toBeInTheDocument();
+    expect(screen.getByText(/1小时42分后恢复/)).toBeInTheDocument();
   });
 });

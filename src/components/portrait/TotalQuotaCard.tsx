@@ -4,9 +4,10 @@ import { getStatusTheme } from '../../utils/statusTheme';
 
 interface TotalQuotaCardProps {
   data: QuotaItem;
+  daysRemaining?: number;
 }
 
-export const TotalQuotaCard: React.FC<TotalQuotaCardProps> = ({ data }) => {
+export const TotalQuotaCard: React.FC<TotalQuotaCardProps> = ({ data, daysRemaining }) => {
   const percentage = Math.round(data.usageRatio * 100);
   const theme = getStatusTheme(data.usageRatio, data.remaining);
 
@@ -43,7 +44,7 @@ export const TotalQuotaCard: React.FC<TotalQuotaCardProps> = ({ data }) => {
         </div>
       </div>
 
-      {/* 严格 4 段分段容器 */}
+      {/* 严格 4 段分段容器：高度为标准的 h-5 (20px) */}
       <div
         data-testid="segment-container-4"
         className="grid grid-cols-4 gap-2.5 mb-3"
@@ -51,7 +52,7 @@ export const TotalQuotaCard: React.FC<TotalQuotaCardProps> = ({ data }) => {
         {segments.map((fillRatio, idx) => (
           <div
             key={`seg-4-${idx}`}
-            className="h-4.5 rounded-full bg-white/10 relative overflow-hidden"
+            className="h-5 rounded-full bg-white/10 relative overflow-hidden"
           >
             {fillRatio > 0 && (
               <div
@@ -65,7 +66,9 @@ export const TotalQuotaCard: React.FC<TotalQuotaCardProps> = ({ data }) => {
 
       <div className="flex justify-between items-center text-xs text-white/40 font-mono">
         <span>已用 {data.used} / 总额 {data.limit}</span>
-        <span className="text-white/30">4段阶段</span>
+        {daysRemaining !== undefined && daysRemaining > 0 && (
+          <span className="text-emeraldGlow/80">{daysRemaining}天后到期</span>
+        )}
       </div>
     </div>
   );

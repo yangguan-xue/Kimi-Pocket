@@ -228,3 +228,66 @@ export async function fetchKimiUsageData(
     );
   }
 }
+
+/**
+ * 使用 Refresh Token 自动续期获取全新的 Access Token
+ */
+export async function refreshKimiToken(
+  refreshToken: string,
+  apiBase?: string
+): Promise<{ accessToken: string; refreshToken?: string }> {
+  const resolvedBase = getResolvedApiBase(apiBase);
+  const clean = refreshToken.trim();
+  if (!clean) {
+    throw new KimiApiError('未配置 Refresh Token', 'AUTH_INVALID');
+  }
+
+  const payload = extractJwtPayload(clean);
+  const sub = payload?.sub || 'unknown_sub';
+  const ssid = payload?.ssid || '0';
+
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${clean}`,
+    'x-traffic-id': sub,
+    'x-msh-session-id': ssid,
+    'x-msh-platform': 'web',
+    'x-msh-version': '1.0.0',
+    'x-language': 'zh-CN',
+    'connect-protocol-version': '1',
+    'Content-Type': 'application/json',
+  };
+
+  try {
+    const res = await fetch(`${resolvedBase}/kimi.gateway.auth.v1.AuthService/RefreshToken`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ refresh_token: clean }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const newAccess = data.access_token || data.token || data.accessToken;
+      const newRefresh = data.refresh_token || data.refreshToken || clean;
+      if (newAccess) {
+        return { accessToken: newAccess, refreshToken: newRefresh };
+      }
+    }
+
+    const fallback = await fetch(`${resolvedBase}/auth/token/refresh`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ refresh_token: clean }),
+    });
+    if (fallback.ok) {
+      const data = await fallback.json();
+      const newAccess = data.access_token || data.token;
+      if (newAccess) {
+        return { accessToken: newAccess, refreshToken: data.refresh_token || clean };
+      }
+    }
+  } catch (e) {
+    console.warn('Refresh token request failed', e);
+  }
+
+  throw new KimiApiError('自动续期失败，请在设置中重新粘贴有效 Token', 'AUTH_EXPIRED');
+}

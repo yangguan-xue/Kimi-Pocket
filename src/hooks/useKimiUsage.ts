@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { KimiUsageState } from '../types/kimi';
-import { fetchKimiUsageData, KimiApiError } from '../api/client';
+import { fetchKimiUsageData, refreshKimiToken, KimiApiError } from '../api/client';
+import { isTokenNearExpiry } from '../api/jwt';
 
 const STORAGE_KEY = 'kimi_pocket_token';
+const REFRESH_STORAGE_KEY = 'kimi_pocket_refresh_token';
 
 // 初始默认展示数据 (未填 Token 时的演示/就绪态)
 const DEMO_STATE: KimiUsageState = {
@@ -47,11 +49,14 @@ export function useKimiUsage() {
   const [token, setToken] = useState<string>(() => {
     return localStorage.getItem(STORAGE_KEY) || '';
   });
+  const [refreshToken, setRefreshToken] = useState<string>(() => {
+    return localStorage.getItem(REFRESH_STORAGE_KEY) || '';
+  });
   const [state, setState] = useState<KimiUsageState>(DEMO_STATE);
   const [isDemo, setIsDemo] = useState<boolean>(() => !localStorage.getItem(STORAGE_KEY));
   const pollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const refreshData = useCallback(async (activeToken: string) => {
+  const refreshData = useCallback(async (activeToken: string, activeRefreshToken?: string) => {
     if (!activeToken) {
       setIsDemo(true);
       setState((prev) => ({
@@ -66,11 +71,49 @@ export function useKimiUsage() {
       meta: { ...prev.meta, loading: true, error: null },
     }));
 
+    let currentToken = activeToken;
+    const currentRefresh = activeRefreshToken || localStorage.getItem(REFRESH_STORAGE_KEY) || '';
+
+    // 1. 如果 Token 临期 (<=30分钟) 且存在 Refresh Token，预先静默续期
+    if (currentRefresh && isTokenNearExpiry(currentToken, 1800)) {
+      try {
+        const refreshed = await refreshKimiToken(currentRefresh);
+        currentToken = refreshed.accessToken;
+        localStorage.setItem(STORAGE_KEY, refreshed.accessToken);
+        setToken(refreshed.accessToken);
+        if (refreshed.refreshToken) {
+          localStorage.setItem(REFRESH_STORAGE_KEY, refreshed.refreshToken);
+          setRefreshToken(refreshed.refreshToken);
+        }
+      } catch (e) {
+        console.warn('Pre-emptive token refresh failed', e);
+      }
+    }
+
     try {
-      const data = await fetchKimiUsageData(activeToken);
+      const data = await fetchKimiUsageData(currentToken);
       setState(data);
       setIsDemo(false);
     } catch (err) {
+      // 2. 如果收到 401 且有 Refresh Token，自动重试刷新续期
+      if (err instanceof KimiApiError && err.status === 401 && currentRefresh) {
+        try {
+          const refreshed = await refreshKimiToken(currentRefresh);
+          localStorage.setItem(STORAGE_KEY, refreshed.accessToken);
+          setToken(refreshed.accessToken);
+          if (refreshed.refreshToken) {
+            localStorage.setItem(REFRESH_STORAGE_KEY, refreshed.refreshToken);
+            setRefreshToken(refreshed.refreshToken);
+          }
+          const data = await fetchKimiUsageData(refreshed.accessToken);
+          setState(data);
+          setIsDemo(false);
+          return;
+        } catch (refreshErr) {
+          console.error('Silent auto-refresh failed', refreshErr);
+        }
+      }
+
       const message = err instanceof KimiApiError ? err.message : '获取数据异常';
       setState((prev) => ({
         ...prev,
@@ -83,15 +126,23 @@ export function useKimiUsage() {
     }
   }, []);
 
-  const saveToken = useCallback((newToken: string) => {
+  const saveToken = useCallback((newToken: string, newRefreshToken?: string) => {
     const clean = newToken.trim();
+    const cleanRefresh = (newRefreshToken || '').trim();
+
     if (clean) {
       localStorage.setItem(STORAGE_KEY, clean);
       setToken(clean);
-      refreshData(clean);
+      if (cleanRefresh) {
+        localStorage.setItem(REFRESH_STORAGE_KEY, cleanRefresh);
+        setRefreshToken(cleanRefresh);
+      }
+      refreshData(clean, cleanRefresh);
     } else {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(REFRESH_STORAGE_KEY);
       setToken('');
+      setRefreshToken('');
       setIsDemo(true);
       setState(DEMO_STATE);
     }
@@ -138,9 +189,10 @@ export function useKimiUsage() {
 
   return {
     token,
+    refreshToken,
     state,
     isDemo,
     saveToken,
-    refresh: () => refreshData(token),
+    refresh: () => refreshData(token, refreshToken),
   };
 }

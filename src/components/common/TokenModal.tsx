@@ -4,33 +4,36 @@ import { X, Key, ShieldCheck } from 'lucide-react';
 interface TokenModalProps {
   isOpen: boolean;
   currentToken: string;
+  currentRefreshToken?: string;
   onClose: () => void;
-  onSave: (token: string) => void;
+  onSave: (token: string, refreshToken?: string) => void;
 }
 
 export const TokenModal: React.FC<TokenModalProps> = ({
   isOpen,
   currentToken,
+  currentRefreshToken = '',
   onClose,
   onSave,
 }) => {
   const [inputVal, setInputVal] = useState(currentToken);
+  const [refreshVal, setRefreshVal] = useState(currentRefreshToken);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(inputVal);
+    onSave(inputVal, refreshVal);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
       <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl w-full max-w-md p-5 shadow-2xl text-white">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Key className="w-4 h-4 text-emeraldGlow" />
-            <h2 className="text-sm font-semibold">配置 Kimi 浏览器 Token</h2>
+            <h2 className="text-sm font-semibold">配置 Kimi 凭证与自动续期</h2>
           </div>
           <button
             onClick={onClose}
@@ -40,23 +43,44 @@ export const TokenModal: React.FC<TokenModalProps> = ({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
-          <p className="text-xs text-white/60 leading-relaxed">
-            请从浏览器控制台 (<code className="text-emeraldGlow">kimi.com/code/console</code>) 的
-            LocalStorage 中复制 <code className="text-white/80">access_token</code> 并粘贴至下方：
-          </p>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <div>
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-xs text-white/80 font-medium">
+                Access Token <span className="text-red-400">*</span>
+              </label>
+              <span className="text-[10px] text-white/40">F12 开发者工具 Application 面板获取</span>
+            </div>
+            <textarea
+              value={inputVal}
+              onChange={(e) => setInputVal(e.target.value)}
+              rows={3}
+              placeholder="必填：粘贴 access_token (以 eyJhbGci... 开头)"
+              className="w-full p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emeraldGlow/50 transition-colors resize-none"
+            />
+          </div>
 
-          <textarea
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-            rows={4}
-            placeholder="粘贴 eyJhbGciOiJIUzI1NiJ9... 格式的 access_token"
-            className="w-full p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emeraldGlow/50 transition-colors resize-none"
-          />
+          <div>
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-xs text-emeraldGlow font-medium flex items-center gap-1">
+                Refresh Token <span className="text-[10px] text-emeraldGlow/70">(自动续期专用，推荐填入)</span>
+              </label>
+            </div>
+            <textarea
+              value={refreshVal}
+              onChange={(e) => setRefreshVal(e.target.value)}
+              rows={2}
+              placeholder="可选推荐：粘贴 refresh_token，开启永久静默自动续期"
+              className="w-full p-2 rounded-xl bg-white/5 border border-emeraldGlow/20 text-xs font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emeraldGlow/60 transition-colors resize-none"
+            />
+            <p className="text-[10px] text-white/40 mt-1">
+              提示：填入 refresh_token 后，当 access_token 过期时客户端会自动向 Kimi 网关静默换新，无需重复手动配置。
+            </p>
+          </div>
 
           <div className="flex items-center gap-1.5 text-[11px] text-white/40">
-            <ShieldCheck className="w-3.5 h-3.5 text-emeraldGlow" />
-            <span>Token 仅保存在本机 LocalStorage，绝不上传任何第三方。</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-emeraldGlow shrink-0" />
+            <span>凭证仅加密存储于本机 LocalStorage，绝不离端传输。</span>
           </div>
 
           <div className="flex items-center justify-between pt-2">
@@ -64,12 +88,13 @@ export const TokenModal: React.FC<TokenModalProps> = ({
               type="button"
               onClick={() => {
                 setInputVal('');
-                onSave('');
+                setRefreshVal('');
+                onSave('', '');
                 onClose();
               }}
               className="text-xs text-red-400/80 hover:text-red-400 transition-colors"
             >
-              清除 Token (切换演示)
+              清除凭证
             </button>
 
             <div className="flex items-center gap-2">
