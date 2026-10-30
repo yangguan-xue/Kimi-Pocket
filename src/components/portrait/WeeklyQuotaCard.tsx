@@ -1,5 +1,6 @@
 import React from 'react';
 import type { TimedQuotaItem } from '../../types/kimi';
+import { getStatusTheme } from '../../utils/statusTheme';
 
 interface WeeklyQuotaCardProps {
   data: TimedQuotaItem;
@@ -7,6 +8,7 @@ interface WeeklyQuotaCardProps {
 
 export const WeeklyQuotaCard: React.FC<WeeklyQuotaCardProps> = ({ data }) => {
   const percentage = Math.round(data.usageRatio * 100);
+  const theme = getStatusTheme(data.usageRatio, data.remaining);
 
   // 7段逻辑：每段代表 1/7
   const segmentStep = 1 / 7;
@@ -25,7 +27,21 @@ export const WeeklyQuotaCard: React.FC<WeeklyQuotaCardProps> = ({ data }) => {
     >
       <div className="flex justify-between items-center mb-2.5">
         <span className="text-xs font-medium text-white/70">周用量 (Weekly Quota)</span>
-        <span className="text-xs font-semibold text-emeraldGlow font-mono">{percentage}%</span>
+        <div className="flex items-center gap-1.5">
+          {theme.level === 'warning' && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
+              用量偏高
+            </span>
+          )}
+          {theme.level === 'critical' && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 animate-pulse">
+              额度紧张
+            </span>
+          )}
+          <span className={`text-xs font-semibold ${theme.textClass} font-mono`}>
+            {percentage}%
+          </span>
+        </div>
       </div>
 
       {/* 严格 7 段分段容器 */}
@@ -40,7 +56,7 @@ export const WeeklyQuotaCard: React.FC<WeeklyQuotaCardProps> = ({ data }) => {
           >
             {fillRatio > 0 && (
               <div
-                className="h-full bg-emeraldGlow rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(16,185,129,0.6)]"
+                className={`h-full ${theme.bgClass} rounded-full transition-all duration-500 ${theme.glowShadow}`}
                 style={{ width: `${fillRatio * 100}%` }}
               />
             )}
@@ -50,7 +66,7 @@ export const WeeklyQuotaCard: React.FC<WeeklyQuotaCardProps> = ({ data }) => {
 
       <div className="flex justify-between items-center text-[11px] font-mono">
         <span className="text-white/40">已用 {data.used} / 总额 {data.limit}</span>
-        <span className="text-emeraldGlow/90">{data.resetCountdown}重置 (7段)</span>
+        <span className={theme.textClass}>{data.resetCountdown}重置 (7段)</span>
       </div>
     </div>
   );

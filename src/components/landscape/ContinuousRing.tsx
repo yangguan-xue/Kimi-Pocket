@@ -1,7 +1,9 @@
 import React from 'react';
+import { getStatusTheme } from '../../utils/statusTheme';
 
 interface ContinuousRingProps {
   ratio: number;
+  remaining?: number;
   title: string;
   sublabel: string;
   valueText: string;
@@ -11,6 +13,7 @@ interface ContinuousRingProps {
 
 export const ContinuousRing: React.FC<ContinuousRingProps> = ({
   ratio,
+  remaining,
   title,
   sublabel,
   valueText,
@@ -21,6 +24,9 @@ export const ContinuousRing: React.FC<ContinuousRingProps> = ({
   const circumference = 2 * Math.PI * radius; // ~282.74
   const clampedRatio = Math.min(1, Math.max(0, ratio));
   const filledLength = clampedRatio * circumference;
+
+  // 动态三态色彩计算
+  const theme = getStatusTheme(ratio, remaining);
 
   return (
     <div
@@ -51,30 +57,40 @@ export const ContinuousRing: React.FC<ContinuousRingProps> = ({
               cy="60"
               r={radius}
               fill="none"
-              stroke="#00E5FF"
+              stroke={theme.hex}
               strokeWidth="8"
               strokeDasharray={`${filledLength} ${circumference}`}
               strokeLinecap="round"
-              className="transition-all duration-700 ease-out drop-shadow-[0_0_8px_rgba(0,229,255,0.8)]"
+              className={`transition-all duration-700 ease-out ${theme.filterDrop}`}
             />
           )}
         </svg>
 
         {/* 环心数据指标 */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span className="text-2xl font-bold font-mono tracking-tight text-white">
+          <span className={`text-2xl font-bold font-mono tracking-tight ${theme.textClass}`}>
             {valueText}
           </span>
           <span className="text-[11px] font-mono text-white/50 mt-0.5">
             {subValueText}
           </span>
+          {theme.level === 'warning' && (
+            <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 mt-1">
+              不足
+            </span>
+          )}
+          {theme.level === 'critical' && (
+            <span className="text-[9px] px-1.5 py-0.2 rounded bg-red-500/20 text-red-300 mt-1 animate-pulse">
+              告急
+            </span>
+          )}
         </div>
       </div>
 
       {/* 环底标签 */}
       <div className="mt-3 text-center">
         <div className="text-sm font-medium text-white/90">{title}</div>
-        <div className="text-[11px] font-mono mt-0.5 text-cyanGlow">
+        <div className={`text-[11px] font-mono mt-0.5 ${theme.textClass}`}>
           {sublabel}
         </div>
       </div>

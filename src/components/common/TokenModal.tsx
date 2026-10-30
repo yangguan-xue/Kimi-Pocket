@@ -29,7 +29,7 @@ export const TokenModal: React.FC<TokenModalProps> = ({
       <div className="bg-[#12141A] border border-white/10 rounded-2xl w-full max-w-md p-5 shadow-2xl text-white">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Key className="w-4 h-4 text-cyanGlow" />
+            <Key className="w-4 h-4 text-emeraldGlow" />
             <h2 className="text-sm font-semibold">配置 Kimi 浏览器 Token</h2>
           </div>
           <button
@@ -42,7 +42,7 @@ export const TokenModal: React.FC<TokenModalProps> = ({
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
           <p className="text-xs text-white/60 leading-relaxed">
-            请从浏览器控制台 (<code className="text-cyanGlow">kimi.com/code/console</code>) 的
+            请从浏览器控制台 (<code className="text-emeraldGlow">kimi.com/code/console</code>) 的
             LocalStorage 中复制 <code className="text-white/80">access_token</code> 并粘贴至下方：
           </p>
 
@@ -51,7 +51,7 @@ export const TokenModal: React.FC<TokenModalProps> = ({
             onChange={(e) => setInputVal(e.target.value)}
             rows={4}
             placeholder="粘贴 eyJhbGciOiJIUzI1NiJ9... 格式的 access_token"
-            className="w-full p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-cyanGlow/50 transition-colors resize-none"
+            className="w-full p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emeraldGlow/50 transition-colors resize-none"
           />
 
           <div className="flex items-center gap-1.5 text-[11px] text-white/40">
@@ -82,7 +82,7 @@ export const TokenModal: React.FC<TokenModalProps> = ({
               </button>
               <button
                 type="submit"
-                className="px-4 py-1.5 rounded-lg bg-cyanGlow text-black font-medium text-xs hover:bg-cyanGlow/90 transition-all shadow-[0_0_12px_rgba(0,229,255,0.4)]"
+                className="px-4 py-1.5 rounded-lg bg-emeraldGlow text-black font-semibold text-xs hover:bg-emeraldGlow/90 transition-all shadow-[0_0_12px_rgba(16,185,129,0.4)]"
               >
                 保存并生效
               </button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { QuotaItem } from '../../types/kimi';
+import { getStatusTheme } from '../../utils/statusTheme';
 
 interface TotalQuotaCardProps {
   data: QuotaItem;
@@ -7,6 +8,7 @@ interface TotalQuotaCardProps {
 
 export const TotalQuotaCard: React.FC<TotalQuotaCardProps> = ({ data }) => {
   const percentage = Math.round(data.usageRatio * 100);
+  const theme = getStatusTheme(data.usageRatio, data.remaining);
 
   // 4段逻辑：每段代表 25% (0.25)
   const segments = [0, 1, 2, 3].map((index) => {
@@ -24,7 +26,21 @@ export const TotalQuotaCard: React.FC<TotalQuotaCardProps> = ({ data }) => {
     >
       <div className="flex justify-between items-center mb-2.5">
         <span className="text-xs font-medium text-white/70">总用量 (Total Quota)</span>
-        <span className="text-xs font-semibold text-cyanGlow font-mono">{percentage}%</span>
+        <div className="flex items-center gap-1.5">
+          {theme.level === 'warning' && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
+              用量偏高
+            </span>
+          )}
+          {theme.level === 'critical' && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 animate-pulse">
+              额度紧张
+            </span>
+          )}
+          <span className={`text-xs font-semibold ${theme.textClass} font-mono`}>
+            {percentage}%
+          </span>
+        </div>
       </div>
 
       {/* 严格 4 段分段容器 */}
@@ -39,7 +55,7 @@ export const TotalQuotaCard: React.FC<TotalQuotaCardProps> = ({ data }) => {
           >
             {fillRatio > 0 && (
               <div
-                className="h-full bg-cyanGlow rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(0,229,255,0.6)]"
+                className={`h-full ${theme.bgClass} rounded-full transition-all duration-500 ${theme.glowShadow}`}
                 style={{ width: `${fillRatio * 100}%` }}
               />
             )}

@@ -11,7 +11,6 @@ describe('Landscape HUD 矢量仪表盘数学与结构测试', () => {
       <SegmentedRing
         segments={4}
         ratio={0.65}
-        color="cyan"
         title="总用量"
         sublabel="4段圆弧"
         valueText="65%"
@@ -30,7 +29,6 @@ describe('Landscape HUD 矢量仪表盘数学与结构测试', () => {
       <SegmentedRing
         segments={7}
         ratio={0.42}
-        color="emerald"
         title="周用量"
         sublabel="3天后重置"
         valueText="42%"

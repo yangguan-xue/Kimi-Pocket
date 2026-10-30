@@ -24,12 +24,12 @@ export const Header: React.FC<HeaderProps> = ({
               ? 'bg-yellow-400 animate-pulse'
               : isDemo
               ? 'bg-white/40'
-              : 'bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)]'
+              : 'bg-emeraldGlow shadow-[0_0_8px_rgba(16,185,129,0.8)]'
           }`}
         />
         <h1 className="text-sm md:text-base font-semibold tracking-tight text-white flex items-center gap-2">
           Kimi Pocket
-          <span className="text-[11px] font-normal px-2 py-0.5 rounded-full bg-white/10 text-cyanGlow border border-cyanGlow/20">
+          <span className="text-[11px] font-normal px-2 py-0.5 rounded-full bg-white/10 text-emeraldGlow border border-emeraldGlow/30">
             {state.plan.title}
           </span>
           {isDemo && (
@@ -60,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={onOpenTokenModal}
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 text-xs text-white/80 hover:bg-white/20 transition-colors"
         >
-          <Key className="w-3.5 h-3.5 text-cyanGlow" />
+          <Key className="w-3.5 h-3.5 text-emeraldGlow" />
           <span className="hidden sm:inline">Token 设置</span>
         </button>
       </div>
