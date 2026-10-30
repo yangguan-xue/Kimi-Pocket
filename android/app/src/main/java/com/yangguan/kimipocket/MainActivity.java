@@ -3,8 +3,11 @@ package com.yangguan.kimipocket;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -15,6 +18,7 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         applyImmersiveFullScreen();
+        configureWebViewDarkSettings();
     }
 
     @Override
@@ -22,6 +26,18 @@ public class MainActivity extends BridgeActivity {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             applyImmersiveFullScreen();
+        }
+    }
+
+    private void configureWebViewDarkSettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try {
+                WebView webView = getBridge().getWebView();
+                if (webView != null) {
+                    // 禁止 Chromium 引擎二次强制反色，防止输入框长按弹出的 Floating ActionMode 变成全屏白色反色蒙层
+                    webView.getSettings().setForceDark(WebSettings.FORCE_DARK_OFF);
+                }
+            } catch (Exception ignored) {}
         }
     }
 
@@ -45,6 +61,15 @@ public class MainActivity extends BridgeActivity {
         if (controller != null) {
             controller.hide(WindowInsetsCompat.Type.systemBars());
             controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
+    }
+
+    @Override
+    public ActionMode onWindowStartingActionMode(ActionMode.Callback callback, int type) {
+        try {
+            return super.onWindowStartingActionMode(callback, type);
+        } catch (Exception e) {
+            return null;
         }
     }
 }
