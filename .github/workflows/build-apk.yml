@@ -25,20 +25,25 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: 配置 Java 17 (Zulu JDK)
+      - name: 配置 Java 21 (Temurin JDK)
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: 配置 Gradle 环境与缓存
         uses: gradle/actions/setup-gradle@v4
 
       - name: 安装 npm 依赖
-        run: npm ci
+        run: |
+          npm ci
+          npx cap telemetry off || true
 
-      - name: 编译前端产物并同步到 Android 原生工程
-        run: npm run build:android
+      - name: 编译 Web 前端
+        run: npm run build
+
+      - name: 同步前端产物到 Android 原生工程
+        run: npx cap sync android
 
       - name: 赋予 Gradle 执行权限
         run: chmod +x android/gradlew
@@ -46,9 +51,9 @@ jobs:
       - name: 执行 Gradle 编译 Debug APK
         run: |
           cd android
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --stacktrace --no-daemon
 
-      - name: 重命名 APK 文件以包含版本和提交信息
+      - name: 整理 APK 文件
         run: |
           mkdir -p release-output
           cp android/app/build/outputs/apk/debug/app-debug.apk release-output/Kimi-Pocket-${{ github.sha }}.apk
