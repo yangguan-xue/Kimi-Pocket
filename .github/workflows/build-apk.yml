@@ -44,19 +44,12 @@ jobs:
           echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
-      - name: 安装 npm 依赖
+      - name: 编译 Web 前端产物并同步
         run: |
           npm ci
           npx cap telemetry off || true
-
-      - name: 编译 Web 前端
-        run: npm run build
-
-      - name: 同步前端静态资源到 Android 工程
-        run: |
-          mkdir -p android/app/src/main/assets/public
-          cp -r dist/* android/app/src/main/assets/public/
-          npx cap copy android || true
+          npm run build
+          npx cap copy android
 
       - name: 赋予 Gradle 执行权限
         run: chmod +x android/gradlew
