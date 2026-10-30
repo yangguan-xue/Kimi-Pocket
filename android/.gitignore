@@ -89,4 +89,13 @@ lint/tmp/
 # Android Profiling
 *.hprof
 
+# Cordova plugins for Capacitor (tracked for CI build stability)
+# capacitor-cordova-android-plugins
 
+# Copied web assets (managed by cap sync)
+# app/src/main/assets/public
+
+# Generated Config files (tracked for CI build stability)
+# app/src/main/assets/capacitor.config.json
+# app/src/main/assets/capacitor.plugins.json
+# app/src/main/res/xml/config.xml

@@ -41,10 +41,8 @@ jobs:
       - name: 构建 Web 前端
         run: npm run build
 
-      - name: 同步产物到 Android Assets
-        run: |
-          mkdir -p android/app/src/main/assets/public
-          cp -r dist/* android/app/src/main/assets/public/
+      - name: 同步 Capacitor 原生工程与静态资源
+        run: npx cap sync android
 
       - name: 赋予 Gradle 执行权限
         run: chmod +x android/gradlew
@@ -52,7 +50,7 @@ jobs:
       - name: 执行 Gradle 编译 Debug APK
         run: |
           cd android
-          ./gradlew assembleDebug --stacktrace --no-daemon
+          ./gradlew assembleDebug --stacktrace
 
       - name: 整理 APK 文件
         run: |
