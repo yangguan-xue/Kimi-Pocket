@@ -28,35 +28,47 @@ export const TokenModal: React.FC<TokenModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl w-full max-w-md p-5 shadow-2xl text-white">
-        <div className="flex items-center justify-between mb-3">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 pt-6 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fade-in">
+      <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl w-full max-w-md p-4 sm:p-5 shadow-2xl text-white max-h-[90vh] flex flex-col">
+        {/* 顶部标题栏：常驻保存按钮，无论软键盘如何弹起都绝对不被遮挡 */}
+        <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3 shrink-0">
           <div className="flex items-center gap-2">
             <Key className="w-4 h-4 text-emeraldGlow" />
-            <h2 className="text-sm font-semibold">配置 Kimi 凭证与自动续期</h2>
+            <h2 className="text-sm font-semibold">配置凭证与自动续期</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="px-3.5 py-1 rounded-lg bg-emeraldGlow text-black font-semibold text-xs hover:bg-emeraldGlow/90 transition-all shadow-[0_0_10px_rgba(16,185,129,0.5)] active:scale-95"
+            >
+              保存
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-1.5 rounded-lg hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        {/* 表单内容区：支持自适应上下平滑滚动避让软键盘 */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto pr-1 flex flex-col gap-3">
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-xs text-white/80 font-medium">
                 Access Token <span className="text-red-400">*</span>
               </label>
-              <span className="text-[10px] text-white/40">F12 开发者工具 Application 面板获取</span>
+              <span className="text-[10px] text-white/40">F12 Application 面板获取</span>
             </div>
             <textarea
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
-              rows={3}
-              placeholder="必填：粘贴 access_token (以 eyJhbGci... 开头)"
-              className="w-full p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emeraldGlow/50 transition-colors resize-none"
+              rows={2}
+              placeholder="必填：粘贴 access_token"
+              className="w-full p-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emeraldGlow/50 transition-colors resize-none"
             />
           </div>
 
@@ -73,7 +85,7 @@ export const TokenModal: React.FC<TokenModalProps> = ({
               placeholder="可选推荐：粘贴 refresh_token，开启永久静默自动续期"
               className="w-full p-2 rounded-xl bg-white/5 border border-emeraldGlow/20 text-xs font-mono text-white placeholder:text-white/20 focus:outline-none focus:border-emeraldGlow/60 transition-colors resize-none"
             />
-            <p className="text-[10px] text-white/40 mt-1">
+            <p className="text-[10px] text-white/40 mt-1 leading-relaxed">
               提示：填入 refresh_token 后，当 access_token 过期时客户端会自动向 Kimi 网关静默换新，无需重复手动配置。
             </p>
           </div>
@@ -83,7 +95,8 @@ export const TokenModal: React.FC<TokenModalProps> = ({
             <span>凭证仅加密存储于本机 LocalStorage，绝不离端传输。</span>
           </div>
 
-          <div className="flex items-center justify-between pt-2">
+          {/* 底部操作区 (常规屏幕备用) */}
+          <div className="flex items-center justify-between pt-2 mt-auto border-t border-white/5">
             <button
               type="button"
               onClick={() => {
