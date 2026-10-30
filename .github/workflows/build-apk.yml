@@ -14,9 +14,6 @@ jobs:
   build-apk:
     name: Build & Package Android APK
     runs-on: ubuntu-latest
-    env:
-      ANDROID_HOME: /usr/local/lib/android/sdk
-      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
 
     steps:
       - name: 检出代码
@@ -34,21 +31,17 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 配置 Gradle 环境与缓存
-        uses: gradle/actions/setup-gradle@v4
-
       - name: 自动接受 Android SDK 协议
         run: |
-          mkdir -p "$ANDROID_HOME/licenses" || true
-          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "$ANDROID_HOME/licenses/android-sdk-license"
-          echo "84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: 安装 npm 依赖
-        run: npm install
+        run: |
+          npm install
 
       - name: 构建 Web 前端
-        run: npm run build
+        run: |
+          npm run build
 
       - name: 同步产物到 Android Assets
         run: |
@@ -61,6 +54,8 @@ jobs:
       - name: 执行 Gradle 编译 Debug APK
         run: |
           cd android
+          echo "Java version used by runner:"
+          java -version
           ./gradlew assembleDebug --stacktrace --no-daemon
 
       - name: 整理 APK 文件
