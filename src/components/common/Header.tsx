@@ -16,10 +16,10 @@ export const Header: React.FC<HeaderProps> = ({
   onRefresh,
 }) => {
   return (
-    <header className="flex items-center justify-between w-full max-w-4xl mx-auto mb-4 px-2">
-      <div className="flex items-center gap-2.5">
+    <header className="flex items-center justify-between w-full max-w-4xl mx-auto mb-3 px-3 pt-2">
+      <div className="flex items-center gap-2 shrink-0">
         <span
-          className={`w-2.5 h-2.5 rounded-full ${
+          className={`w-2.5 h-2.5 rounded-full shrink-0 ${
             state.meta.loading
               ? 'bg-yellow-400 animate-pulse'
               : isDemo
@@ -27,21 +27,25 @@ export const Header: React.FC<HeaderProps> = ({
               : 'bg-emeraldGlow shadow-[0_0_8px_rgba(16,185,129,0.8)]'
           }`}
         />
-        <h1 className="text-sm md:text-base font-semibold tracking-tight text-white flex items-center gap-2">
-          Kimi Pocket
-          <span className="text-[11px] font-normal px-2 py-0.5 rounded-full bg-white/10 text-emeraldGlow border border-emeraldGlow/30">
-            {state.plan.title}
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-sm md:text-base font-semibold tracking-tight text-white whitespace-nowrap">
+            Kimi Pocket
           </span>
-          {isDemo && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
-              演示预览
+          {state.plan.title && (
+            <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-white/10 text-emeraldGlow border border-emeraldGlow/30 whitespace-nowrap">
+              {state.plan.title}
             </span>
           )}
-        </h1>
+          {isDemo && (
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 whitespace-nowrap">
+              演示
+            </span>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center gap-3">
-        <span className="text-xs text-white/40 font-mono hidden sm:inline">
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <span className="text-xs text-white/50 font-mono hidden sm:inline whitespace-nowrap">
           到期: {state.plan.daysRemaining}天后
         </span>
 
@@ -58,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={onOpenTokenModal}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 text-xs text-white/80 hover:bg-white/20 transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/10 text-xs text-white/80 hover:bg-white/20 transition-colors whitespace-nowrap"
         >
           <Key className="w-3.5 h-3.5 text-emeraldGlow" />
           <span className="hidden sm:inline">Token 设置</span>

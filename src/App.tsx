@@ -17,7 +17,7 @@ export const App: React.FC = () => {
     manualOverride === 'auto' ? detectedLandscape : manualOverride === 'landscape';
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col justify-center items-center p-3 sm:p-6 select-none font-sans">
+    <div className="h-screen w-screen bg-black text-white flex flex-col justify-between items-center p-3 sm:p-5 select-none font-sans overflow-hidden">
       {/* 桌面端模式切换辅助控制栏 */}
       <div className="fixed top-3 right-3 z-40 hidden md:flex items-center gap-1.5 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full text-xs text-white/70 border border-white/10">
         <span className="text-[11px] text-white/40">视图:</span>
@@ -47,7 +47,7 @@ export const App: React.FC = () => {
         </button>
       </div>
 
-      <div className="w-full flex flex-col items-center">
+      <div className="w-full flex-1 flex flex-col items-center justify-between overflow-hidden">
         {/* 顶部状态与操作栏 */}
         <Header
           state={state}
@@ -58,7 +58,7 @@ export const App: React.FC = () => {
 
         {/* 异常提示横幅 */}
         {state.meta.error && (
-          <div className="w-full max-w-md mx-auto mb-3.5 px-3.5 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-xs flex items-center gap-2">
+          <div className="w-full max-w-md mx-auto mb-2 px-3.5 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-300 text-xs flex items-center gap-2 shrink-0">
             <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
             <span className="flex-1">{state.meta.error}</span>
             <button
@@ -72,14 +72,14 @@ export const App: React.FC = () => {
 
         {/* Token 即将过期提示 */}
         {state.meta.isTokenExpiring && (
-          <div className="w-full max-w-md mx-auto mb-3.5 px-3.5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex items-center gap-2">
+          <div className="w-full max-w-md mx-auto mb-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex items-center gap-2 shrink-0">
             <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
             <span>Kimi Token 即将到期（1小时内），请及时更新。</span>
           </div>
         )}
 
         {/* 主视口：竖屏直排 3 卡片 VS 横屏 StandBy 3 环仪表盘 */}
-        <main className="w-full flex justify-center transition-all duration-300">
+        <main className="w-full flex-1 flex items-center justify-center overflow-hidden transition-all duration-300">
           {isLandscape ? (
             <LandscapeHUD state={state} />
           ) : (

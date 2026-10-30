@@ -8,6 +8,10 @@
 			"enabled": true
 		}
 	},
+	"android": {
+		"backgroundColor": "#000000",
+		"allowMixedContent": true
+	},
 	"server": {
 		"androidScheme": "https"
 	}

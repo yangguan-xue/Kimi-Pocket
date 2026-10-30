@@ -15,7 +15,7 @@ export const LandscapeHUD: React.FC<LandscapeHUDProps> = ({ state }) => {
   return (
     <div
       data-testid="landscape-hud"
-      className="w-full max-w-4xl mx-auto bg-cardDark/80 border border-borderDark rounded-3xl p-6 backdrop-blur-2xl shadow-2xl transition-all duration-300"
+      className="w-full max-w-5xl mx-auto h-full flex flex-col justify-center bg-cardDark/80 border border-borderDark rounded-3xl p-6 sm:p-8 backdrop-blur-2xl shadow-2xl transition-all duration-300"
     >
       <div className="grid grid-cols-3 gap-6 items-center justify-items-center">
         {/* 左环：总用量 (严格 4 段圆弧) */}
