@@ -1,148 +1,122 @@
 <div align="center">
+  <h1>Kimi Pocket</h1>
+  <p><strong>把 Kimi Code 用量，装进口袋。</strong></p>
+  <p>专为移动端打造的订阅额度监控工具，支持 Android 与 PWA。</p>
 
-# 📱 Kimi Pocket
+  <p>
+    <a href="https://github.com/yangguan-xue/Kimi-Pocket/releases/latest"><img src="https://img.shields.io/github/v/release/yangguan-xue/Kimi-Pocket?color=10B981&label=Release" alt="Release"/></a>
+    <a href="https://github.com/yangguan-xue/Kimi-Pocket/actions"><img src="https://img.shields.io/github/actions/workflow/status/yangguan-xue/Kimi-Pocket/build-apk.yml?branch=main&label=Build" alt="Build Status"/></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-262626" alt="License: MIT"/></a>
+  </p>
 
-**专为移动端打造的沉浸式 Kimi Code 订阅用量与额度观测仪**
+  <img src="docs/assets/readme-hero.png" alt="Kimi Pocket 深色额度仪表盘主视觉" width="100%"/>
 
-[![Release](https://img.shields.io/github/v/release/yangguan-xue/Kimi-Pocket?color=10B981&label=Release&logo=android)](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/yangguan-xue/Kimi-Pocket/build-apk.yml?branch=main&label=Build&logo=githubactions)](https://github.com/yangguan-xue/Kimi-Pocket/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Capacitor](https://img.shields.io/badge/Capacitor-7-119EFF?logo=capacitor&logoColor=white)](https://capacitorjs.com/)
-
-<p align="center">
-  <a href="#-快速下载安装">📥 立即下载</a> •
-  <a href="#-核心特性">✨ 核心特性</a> •
-  <a href="#-凭证获取与配置">🔑 配置指南</a> •
-  <a href="#-本地开发与构建">🛠️ 本地构建</a> •
-  <a href="#-致谢与灵感">🙏 致谢</a>
-</p>
-
+  <p>
+    <a href="#快速开始">快速开始</a> ·
+    <a href="#界面预览">界面预览</a> ·
+    <a href="#凭证配置">凭证配置</a> ·
+    <a href="#本地开发">本地开发</a>
+  </p>
 </div>
 
----
+## 少一点查询，多一点掌控
 
-## 💡 灵感与简介
+无需打开浏览器控制台，也不必反复翻查订阅页面。Kimi Pocket 将总额度、周额度、5 小时窗口和重置时间浓缩到一个纯黑界面中，让剩余量与恢复时间一眼可见。
 
-**Kimi Pocket** 是一款极简纯粹、针对 OLED 屏幕深度优化的 Kimi 订阅额度掌上监控工具。
+- **双形态布局**：竖屏使用分段卡片，横屏切换为三环仪表盘，而不是简单拉伸页面。
+- **状态一眼可辨**：正常、紧张、告急分别使用翡翠绿、琥珀黄与红色提示。
+- **自适应刷新**：根据最低剩余额度调整轮询间隔，回到前台时立即更新。
+- **静默续期**：可选填入 `refresh_token`，在访问凭证临期或鉴权失效时尝试自动换新。
+- **移动端细节**：支持沉浸式全屏、剪贴板一键粘贴，以及软键盘弹起时仍可操作的凭证弹窗。
 
-核心协议与灵感参考自桌面端优秀的开源项目 [nekocharm1207/kimi-island](https://github.com/nekocharm1207/kimi-island)。我们将其重构并全面适配移动设备，提供**原生 Android APK** 与 **PWA 渐进式 Web 应用** 双重形态，让你随时随地在手机上一目了然地掌握 Kimi Code 的当前用量、每周重置时间与会员到期状态。
+## 界面预览
 
----
+<table>
+  <tr>
+    <td width="38%" align="center" valign="middle">
+      <strong>竖屏 · 分段卡片</strong><br/><br/>
+      <img src="preview-ui-v2.jpg" alt="竖屏卡片模式" width="92%"/>
+    </td>
+    <td width="62%" align="center" valign="middle">
+      <strong>横屏 · 三环 HUD</strong><br/><br/>
+      <img src="preview-ui-landscape.jpg" alt="横屏三环仪表盘" width="100%"/>
+    </td>
+  </tr>
+</table>
 
-## 📸 界面预览
+## 快速开始
 
-<div align="center">
-  <table>
-    <tr>
-      <td align="center" width="50%">
-        <b>📱 竖屏卡片模式 (Portrait Cards)</b><br/><br/>
-        <img src="preview-ui-v2.jpg" alt="竖屏预览" width="90%"/>
-      </td>
-      <td align="center" width="50%">
-        <b>📟 横屏三环 HUD 模式 (Landscape HUD)</b><br/><br/>
-        <img src="preview-ui-landscape.jpg" alt="横屏预览" width="90%"/>
-      </td>
-    </tr>
-  </table>
-</div>
+<a href="https://github.com/yangguan-xue/Kimi-Pocket/releases/latest/download/Kimi-Pocket-latest.apk"><strong>下载最新 Android APK</strong></a>
 
----
+1. 下载并安装 APK；如系统提示，请允许安装来自当前来源的应用。
+2. 打开 Kimi Pocket，点击右上角的 Token 设置。
+3. 填入 `access_token`，可选填入 `refresh_token`，保存后即可查看用量。
 
-## ✨ 核心特性
+也可以前往 <a href="https://github.com/yangguan-xue/Kimi-Pocket/releases/latest">Releases</a> 查看历史版本与构建产物。
 
-- 🌌 **极致 OLED 纯黑美学**：全局采用极致 `#000000` 纯黑背景与翡翠绿霓虹呼吸微光，功耗极低、视觉通透。
-- 📱 **横竖屏动态自适应**：
-  - **竖屏模式**：分段胶囊进度条卡片（总额度 4 段阶梯、周额度 7 段阶梯、5 小时平滑滚动条），状态与倒计时一览无余。
-  - **横屏模式**：纯净无干扰的三环 HUD 仪表盘，精简居中显示大号百分比，数学级精准弧长渲染，适合桌面支架常亮展示。
-- 🪟 **绝对沉浸式全屏**：原生屏蔽状态栏（信号/电量）与底部导航条，挖孔区及刘海区自动延伸延伸（`SHORT_EDGES`），杜绝任何黑白边与错位。
-- 🔄 **一次配置·永久免维（静默自动续期）**：
-  - 支持填入 `refresh_token`。
-  - 内置智能拦截刷新机制：在 `access_token` 过期前 30 分钟或偶发 401 时，后台自动向 Kimi 官方网关换取新 Token 并无感重试，无需反复手动黏贴。
-- 📋 **防遮挡与一键剪贴板**：
-  - 输入框常驻【📋 一键粘贴】按钮，告别长按呼出系统菜单的烦恼，避免定制 ROM 的反色白屏 Bug。
-  - 弹窗顶部常驻【保存】高亮按钮，配合 `adjustResize` 视口避让，无论键盘如何弹起都触手可及。
-- 🔒 **纯客户端运行·零隐私泄露**：
-  - 凭证仅保存在手机端本地 `LocalStorage`，端到端直接与 Kimi 官方网关通信。
-  - 无任何中心服务器中转，不收集任何用户数据与日志。
+## 凭证配置
 
----
+在电脑浏览器中登录 <a href="https://kimi.moonshot.cn/">Kimi 官网</a>，打开开发者工具的 **Application → Local Storage → `https://kimi.moonshot.cn`**，复制以下字段：
 
-## 📥 快速下载安装
+| 字段 | 是否必填 | 用途 |
+| --- | --- | --- |
+| `access_token` | 是 | 当前接口鉴权 |
+| `refresh_token` | 否，推荐 | 自动续期访问凭证 |
 
-直接前往 [GitHub Releases](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) 下载最新版本的 APK：
+将凭证粘贴到应用的 Token 设置中并保存。`refresh_token` 失效、被撤销或续期接口拒绝请求时，仍需重新配置。
 
-| 文件 | 描述 | 下载链接 |
-| :--- | :--- | :--- |
-| **Kimi-Pocket-latest.apk** | Android 最终稳定版安装包（推荐） | [点击下载 APK](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest/download/Kimi-Pocket-latest.apk) |
+> 凭证属于敏感信息，请勿分享给他人。凭证保存在设备本地 LocalStorage，仅用于请求 Kimi 官方接口；本项目没有自建中转服务器，也不会主动收集使用日志。
 
-> **提示**：安装时若提示“未受信任来源”，请选择“仍要安装”。
+## 刷新策略
 
----
+应用按三类额度中的最低剩余比例自动调整频率：
 
-## 🔑 凭证获取与配置
+| 当前状态 | 刷新间隔 |
+| --- | --- |
+| 正常 | 60 秒 |
+| 任一额度剩余不超过 30% | 30 秒 |
+| 任一额度剩余不超过 10% | 15 秒 |
 
-使用本工具需要获取你的 Kimi 网页端凭证（`access_token` 与推荐的 `refresh_token`）：
+切回应用前台会立即刷新，也可以点击右上角刷新按钮手动更新。
 
-1. 在电脑浏览器登录 [Kimi 官网](https://kimi.moonshot.cn/)。
-2. 按 `F12` 打开开发者工具，切换到 **应用 (Application)** 面板。
-3. 在左侧栏展开 **本地存储空间 (Local Storage)**，点击 `https://kimi.moonshot.cn`。
-4. 在右侧键值列表中找到并复制：
-   - `access_token`：用于当前接口鉴权（必填）。
-   - `refresh_token`：用于自动静默换新凭证（**强烈推荐填入**，填入后永久免再次配置）。
-5. 在手机端打开 **Kimi Pocket**，点击右上角设置图标（🔑）：
-   - 点击 **【一键粘贴】** 自动导入剪贴板内容。
-   - 点击右上角 **【保存】** 按钮即可生效！
+## 本地开发
 
----
-
-## 🛠️ 本地开发与构建
-
-### 1. 克隆项目与安装依赖
+环境要求：Node.js 20、npm；构建 Android 时另需 JDK 21 与 Android SDK 35。
 
 ```bash
 git clone https://github.com/yangguan-xue/Kimi-Pocket.git
 cd Kimi-Pocket
-npm install
-```
-
-### 2. 启动本地开发服务 (Web / PWA)
-
-```bash
+npm ci
 npm run dev
 ```
 
-### 3. 运行单元测试
+常用命令：
 
 ```bash
-npm test
+npm test              # 运行单元测试
+npm run build         # 类型检查并构建 Web / PWA
+npm run build:android # 构建前端并同步 Capacitor 原生工程
 ```
 
-### 4. 编译前端并同步至 Android 原生项目
-
-```bash
-npm run build:android
-```
-
-### 5. 构建 Android Debug APK
+构建 Debug APK：
 
 ```bash
 cd android
 ./gradlew assembleDebug
 ```
-产出物路径：`android/app/build/outputs/apk/debug/app-debug.apk`。
 
----
+产物位于 `android/app/build/outputs/apk/debug/app-debug.apk`。
 
-## 🤝 致谢与灵感
+## 技术栈
 
-- [nekocharm1207/kimi-island](https://github.com/nekocharm1207/kimi-island) - 极其优秀的桌面端灵动岛 Kimi 用量监控工具，本项目协议解析与设计思路的重要启发。
-- [Capacitor](https://capacitorjs.com/) - 现代跨平台原生移动应用运行时。
-- [Tailwind CSS](https://tailwindcss.com/) & [Lucide Icons](https://lucide.dev/) - 简洁美观的现代 UI 与图标库。
+React 19 · TypeScript · Vite 6 · Tailwind CSS · Capacitor 7 · vite-plugin-pwa · Vitest
 
----
+## 致谢
 
-## 📄 开源许可证
+- [nekocharm1207/kimi-island](https://github.com/nekocharm1207/kimi-island)：协议解析与设计思路的重要参考。
+- [Capacitor](https://capacitorjs.com/)：跨平台原生应用运行时。
+- [Tailwind CSS](https://tailwindcss.com/) 与 [Lucide](https://lucide.dev/)：界面样式与图标。
 
-本项目基于 [MIT License](LICENSE) 开源，欢迎自由学习、分享与衍生开发。
+## 许可证
+
+基于 [MIT License](LICENSE) 开源。
