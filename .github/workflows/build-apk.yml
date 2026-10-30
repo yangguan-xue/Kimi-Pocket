@@ -25,18 +25,15 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: 配置 Java 21 (Temurin JDK - 匹配 Capacitor 7 原生编译要求)
+      - name: 配置 Java 21 (Eclipse Temurin)
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 配置 Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: 自动接受 Android SDK 协议
         run: |
-          yes | sdkmanager --licenses || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: 安装 npm 依赖
         run: npm install
