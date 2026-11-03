@@ -1,7 +1,6 @@
 import AppKit
 import KimiPocketCore
 
-@main
 @MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItemController: StatusItemController?

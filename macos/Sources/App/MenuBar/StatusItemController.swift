@@ -20,12 +20,13 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
     }
     
     private func setupStatusItem() {
-        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         self.statusItem = item
         
         if let button = item.button {
             button.image = StatusIconFactory.makeStatusIcon(state: .normal)
-            button.imagePosition = .imageOnly
+            button.title = " Kimi"
+            button.imagePosition = .imageLeading
             button.toolTip = "Kimi Pocket (鼠标悬停查看用量)"
             button.target = self
             button.action = #selector(handleButtonClick(_:))
@@ -39,6 +40,15 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
             )
             button.addTrackingArea(area)
             self.trackingArea = area
+            
+            // 启动后延迟 0.6 秒：自动向用户亮起浮窗，引导用户定位顶栏位置
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
+                guard let self = self, let button = self.statusItem?.button else { return }
+                if let window = button.window {
+                    NSLog("[StatusItemController] Button Window Frame on screen: \(window.frame)")
+                }
+                self.popoverWindow?.showAnchored(to: button)
+            }
         }
     }
     
@@ -171,6 +181,8 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
         window.center()
         window.title = "Kimi Pocket 偏好设置"
         window.isReleasedWhenClosed = false
+        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        window.level = .floating
         window.contentView = NSHostingView(rootView: PreferencesView(store: store))
         
         self.preferencesWindow = window
