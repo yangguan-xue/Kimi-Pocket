@@ -15,10 +15,26 @@ public struct PreferencesView: View {
     }
     
     public var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            Text("Kimi Pocket 偏好设置")
-                .font(.headline)
-                .foregroundColor(.white)
+        VStack(alignment: .leading, spacing: 16) {
+            // 顶部欢迎与位置提示
+            HStack(spacing: 10) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 26))
+                    .foregroundColor(Color(red: 0.0, green: 0.90, blue: 1.0))
+                
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Kimi Pocket 菜单栏监控已就绪")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    Text("请查看屏幕右上角菜单栏的 ✨ 图标，鼠标悬停即可查看实时用量")
+                        .font(.caption)
+                        .foregroundColor(Color(red: 0.6, green: 0.65, blue: 0.72))
+                }
+            }
+            .padding(.bottom, 4)
+            
+            Divider()
+                .background(Color.white.opacity(0.1))
             
             // Token 配置区
             VStack(alignment: .leading, spacing: 8) {

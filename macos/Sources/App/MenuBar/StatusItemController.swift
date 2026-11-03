@@ -20,13 +20,13 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
     }
     
     private func setupStatusItem() {
-        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         self.statusItem = item
         
         if let button = item.button {
             button.image = StatusIconFactory.makeStatusIcon(state: .normal)
             button.imagePosition = .imageOnly
-            button.toolTip = "Kimi Pocket (悬停查看用量)"
+            button.toolTip = "Kimi Pocket (鼠标悬停查看用量)"
             button.target = self
             button.action = #selector(handleButtonClick(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
