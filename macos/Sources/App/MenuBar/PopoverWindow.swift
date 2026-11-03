@@ -98,6 +98,14 @@ public final class PopoverWindow: NSPanel {
         guard let buttonWindow = button.window, let screen = buttonWindow.screen else { return }
         
         let buttonFrameOnScreen = buttonWindow.convertToScreen(button.bounds)
+        // 若系统尚未完成状态栏窗口布局定位（Y 坐标接近 0），延迟 0.15 秒重试
+        if buttonFrameOnScreen.origin.y < 100 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self, weak button] in
+                guard let self = self, let button = button else { return }
+                self.showAnchored(to: button)
+            }
+            return
+        }
         let hudSize = self.frame.size
         
         // 计算目标 X: 居中对齐按钮中心

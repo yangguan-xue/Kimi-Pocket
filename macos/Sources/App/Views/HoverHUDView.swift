@@ -93,24 +93,20 @@ public struct HoverHUDView: View {
                 // 核心 1：5小时额度 (连续平滑单条)
                 RollingQuotaRow(info: state.rolling5h)
                 
-                // 核心 2：本周用量 (7 段药丸条，纯净无冗余文字)
+                // 核心 2：本周用量
                 SegmentedQuotaRow(
                     title: "本周用量",
                     segmentCount: 7,
                     usageRatio: state.weekly.usageRatio,
-                    used: state.weekly.used,
-                    limit: state.weekly.limit,
                     subtitle: state.weekly.resetCountdown.isEmpty ? "每周一 00:00 重置" : "\(state.weekly.resetCountdown)",
                     theme: .cyan
                 )
                 
-                // 核心 3：总用量 (4 段药丸条，纯净无冗余文字)
+                // 核心 3：总用量
                 SegmentedQuotaRow(
                     title: "总用量",
                     segmentCount: 4,
                     usageRatio: state.total.usageRatio,
-                    used: state.total.used,
-                    limit: state.total.limit,
                     subtitle: "当前周期有效",
                     theme: .emerald
                 )

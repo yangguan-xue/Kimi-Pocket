@@ -1,5 +1,6 @@
 import AppKit
 import SwiftUI
+import Combine
 import KimiPocketCore
 
 @MainActor
@@ -10,23 +11,44 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
     private var popoverWindow: PopoverWindow?
     private var preferencesWindow: NSWindow?
     private let store = UsageStore.shared
+    private var cancellables = Set<AnyCancellable>()
     
     public override init() {
         super.init()
         hoverCoordinator.delegate = self
         setupStatusItem()
         setupPopoverWindow()
+        setupStoreBinding()
         store.startPolling()
     }
     
+    private func setupStoreBinding() {
+        store.$usageState
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                if let ratio = state?.rolling5h.usageRatio {
+                    if ratio >= 0.90 {
+                        self.statusItem?.button?.image = StatusIconFactory.makeStatusIcon(state: .critical)
+                    } else if ratio >= 0.80 {
+                        self.statusItem?.button?.image = StatusIconFactory.makeStatusIcon(state: .warning)
+                    } else {
+                        self.statusItem?.button?.image = StatusIconFactory.makeStatusIcon(state: .normal)
+                    }
+                }
+                self.updateHUDViewContent()
+            }
+            .store(in: &cancellables)
+    }
+    
     private func setupStatusItem() {
-        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        item.autosaveName = NSStatusItem.AutosaveName("KimiPocketStatusItem")
         self.statusItem = item
         
         if let button = item.button {
             button.image = StatusIconFactory.makeStatusIcon(state: .normal)
-            button.title = " Kimi"
-            button.imagePosition = .imageLeading
+            button.imagePosition = .imageOnly
             button.toolTip = "Kimi Pocket (鼠标悬停查看用量)"
             button.target = self
             button.action = #selector(handleButtonClick(_:))
@@ -41,12 +63,9 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
             button.addTrackingArea(area)
             self.trackingArea = area
             
-            // 启动后延迟 0.6 秒：自动向用户亮起浮窗，引导用户定位顶栏位置
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
+            // 启动后延迟 0.8 秒：若就绪则向用户平滑亮起浮窗，引导用户定位顶栏图标位置
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
                 guard let self = self, let button = self.statusItem?.button else { return }
-                if let window = button.window {
-                    NSLog("[StatusItemController] Button Window Frame on screen: \(window.frame)")
-                }
                 self.popoverWindow?.showAnchored(to: button)
             }
         }

@@ -8,6 +8,7 @@ public final class KeychainManager: @unchecked Sendable {
     private let account = "kimi_access_token"
     private let lock = NSLock()
     private var cachedToken: String?
+    private var isExplicitlyCleared = false
     
     public init() {}
     
@@ -17,9 +18,11 @@ public final class KeychainManager: @unchecked Sendable {
         defer { lock.unlock() }
         
         let trimmed = token.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let data = trimmed.data(using: .utf8) else { return false }
+        guard !trimmed.isEmpty, let data = trimmed.data(using: .utf8) else { return false }
         
-        // 先删除已存在的项
+        self.cachedToken = trimmed
+        self.isExplicitlyCleared = false
+        
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -27,22 +30,21 @@ public final class KeychainManager: @unchecked Sendable {
         ]
         SecItemDelete(query as CFDictionary)
         
-        // 添加新项
         var attributes = query
         attributes[kSecValueData as String] = data
         attributes[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
         
-        let status = SecItemAdd(attributes as CFDictionary, nil)
-        if status == errSecSuccess {
-            self.cachedToken = trimmed
-            return true
-        }
-        return false
+        SecItemAdd(attributes as CFDictionary, nil)
+        return true
     }
     
     public func getToken() -> String? {
         lock.lock()
         defer { lock.unlock() }
+        
+        if isExplicitlyCleared {
+            return nil
+        }
         
         if let token = cachedToken, !token.isEmpty {
             return token
@@ -59,7 +61,7 @@ public final class KeychainManager: @unchecked Sendable {
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
         guard status == errSecSuccess, let data = item as? Data, let token = String(data: data, encoding: .utf8) else {
-            return nil
+            return cachedToken
         }
         
         self.cachedToken = token
@@ -71,14 +73,16 @@ public final class KeychainManager: @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
         
+        self.cachedToken = nil
+        self.isExplicitlyCleared = true
+        
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: account
         ]
         
-        let status = SecItemDelete(query as CFDictionary)
-        self.cachedToken = nil
-        return status == errSecSuccess || status == errSecItemNotFound
+        _ = SecItemDelete(query as CFDictionary)
+        return true
     }
 }
