@@ -5,7 +5,7 @@
 - **所属 Spec**：[SPEC-06-macos-menubar-app.md](../../specs/SPEC-06-macos-menubar-app.md)
 - **研发阶段**：`Phase 5: macOS 桌面原生端体验与常驻扩展`
 - **前置任务**：`Task 11`
-- **状态**：`PENDING`
+- **状态**：`DONE` (已通过 Release 打包流水线与 Codesign 验收)
 
 ---
 

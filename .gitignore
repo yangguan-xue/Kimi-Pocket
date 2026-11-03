@@ -25,6 +25,15 @@ env/
 .env.*.local
 *.token
 device_id
+scripts/kimi_config.json
+
+# Firmware & Hardware
+firmware_backup/
+firmware_build/
+
+# macOS Desktop App
+macos/.build/
+dist-macos/
 
 # IDE
 .idea/

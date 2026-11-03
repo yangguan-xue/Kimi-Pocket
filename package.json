@@ -12,6 +12,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:android": "tsc && vite build && npx cap sync android",
+    "build:macos": "bash scripts/build-macos.sh",
     "preview": "vite preview",
     "test": "vitest run"
   },

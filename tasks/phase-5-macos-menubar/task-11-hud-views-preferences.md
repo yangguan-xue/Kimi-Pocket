@@ -5,7 +5,7 @@
 - **所属 Spec**：[SPEC-06-macos-menubar-app.md](../../specs/SPEC-06-macos-menubar-app.md)
 - **研发阶段**：`Phase 5: macOS 桌面原生端体验与常驻扩展`
 - **前置任务**：`Task 09`, `Task 10`
-- **状态**：`PENDING`
+- **状态**：`DONE` (已通过全套纯净文案 HUD 与偏好设置面板编译与集成)
 
 ---
 
