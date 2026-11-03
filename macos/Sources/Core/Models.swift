@@ -15,6 +15,33 @@ public struct KimiUsageState: Equatable, Sendable {
             self.daysRemaining = daysRemaining
             self.isActive = isActive
         }
+        
+        /// 格式化到期时间展示文案，例如 "到期时间: 2026-11-28"
+        public var formattedExpirySubtitle: String {
+            guard !endTime.isEmpty else {
+                if daysRemaining > 0 {
+                    return "到期时间: 剩 \(daysRemaining) 天"
+                }
+                return "到期时间: --"
+            }
+            let isoFormatter = ISO8601DateFormatter()
+            isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            var date = isoFormatter.date(from: endTime)
+            if date == nil {
+                let fallback = ISO8601DateFormatter()
+                date = fallback.date(from: endTime)
+            }
+            if let date = date {
+                let displayFormatter = DateFormatter()
+                displayFormatter.dateFormat = "yyyy-MM-dd"
+                return "到期时间: \(displayFormatter.string(from: date))"
+            }
+            // 若为其他格式，截取前 10 位 (yyyy-MM-dd)
+            if endTime.count >= 10 {
+                return "到期时间: \(String(endTime.prefix(10)))"
+            }
+            return "到期时间: \(endTime)"
+        }
     }
     
     public struct RollingQuotaInfo: Equatable, Sendable {
@@ -99,6 +126,38 @@ public struct KimiUsageState: Equatable, Sendable {
 // MARK: - Kimi Connect Protocol 原始 JSON 数据契约
 
 public struct GetSubscriptionResponse: Codable, Sendable {
+    public struct SubscriptionGoods: Codable, Sendable {
+        public let id: String?
+        public let title: String?
+        public let durationDays: Int?
+        public let membershipLevel: String?
+        
+        public init(id: String? = nil, title: String? = nil, durationDays: Int? = nil, membershipLevel: String? = nil) {
+            self.id = id
+            self.title = title
+            self.durationDays = durationDays
+            self.membershipLevel = membershipLevel
+        }
+    }
+    
+    public struct SubscriptionDetail: Codable, Sendable {
+        public let subscriptionId: String?
+        public let goods: SubscriptionGoods?
+        public let currentStartTime: String?
+        public let currentEndTime: String?
+        public let status: String?
+        public let active: Bool?
+        
+        public init(subscriptionId: String? = nil, goods: SubscriptionGoods? = nil, currentStartTime: String? = nil, currentEndTime: String? = nil, status: String? = nil, active: Bool? = nil) {
+            self.subscriptionId = subscriptionId
+            self.goods = goods
+            self.currentStartTime = currentStartTime
+            self.currentEndTime = currentEndTime
+            self.status = status
+            self.active = active
+        }
+    }
+    
     public struct Membership: Codable, Sendable {
         public let level: String?
         public let status: String?
@@ -115,8 +174,11 @@ public struct GetSubscriptionResponse: Codable, Sendable {
         }
     }
     
+    public let subscription: SubscriptionDetail?
     public let membership: Membership?
-    public init(membership: Membership?) {
+    
+    public init(subscription: SubscriptionDetail? = nil, membership: Membership? = nil) {
+        self.subscription = subscription
         self.membership = membership
     }
 }

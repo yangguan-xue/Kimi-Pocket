@@ -98,12 +98,13 @@ public final class KimiClient: Sendable {
         token: String,
         now: Date = Date()
     ) -> KimiUsageState {
-        // 1. 套餐解析
+        // 1. 套餐解析 (兼容 subscription 与 membership 字段)
+        let sub = subResp.subscription
         let membership = subResp.membership
-        let planTitle = membership?.title ?? membership?.level ?? "Kimi Pro"
-        let endTimeStr = membership?.endTime ?? ""
+        let planTitle = sub?.goods?.title ?? membership?.title ?? membership?.level ?? "Kimi Pro"
+        let endTimeStr = sub?.currentEndTime ?? membership?.endTime ?? ""
         var daysRemaining = 0
-        var isActive = true
+        var isActive = sub?.active ?? (membership?.status == "ACTIVE")
         
         if !endTimeStr.isEmpty {
             let formatter = ISO8601DateFormatter()

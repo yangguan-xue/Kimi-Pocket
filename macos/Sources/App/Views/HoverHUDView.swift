@@ -102,12 +102,12 @@ public struct HoverHUDView: View {
                     theme: .cyan
                 )
                 
-                // 核心 3：总用量
+                // 核心 3：总用量 (显示明确的到期时间)
                 SegmentedQuotaRow(
                     title: "总用量",
                     segmentCount: 4,
                     usageRatio: state.total.usageRatio,
-                    subtitle: "当前周期有效",
+                    subtitle: state.plan.formattedExpirySubtitle,
                     theme: .emerald
                 )
             } else {

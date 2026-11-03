@@ -2,11 +2,14 @@ import AppKit
 import SwiftUI
 import KimiPocketCore
 
+@MainActor
 public final class PopoverWindow: NSPanel {
     private let visualEffectView = NSVisualEffectView()
     private weak var hoverCoordinator: HoverCoordinator?
     private var trackingArea: NSTrackingArea?
     private var eventMonitor: Any?
+    private var clickMonitor: Any?
+    private var mouseCheckTimer: Timer?
     
     public init(contentRect: NSRect, hoverCoordinator: HoverCoordinator) {
         self.hoverCoordinator = hoverCoordinator
@@ -127,6 +130,12 @@ public final class PopoverWindow: NSPanel {
         self.alphaValue = 0.0
         self.orderFrontRegardless()
         
+        // 注册全局点击监听：点击外部区域立即收起（非钉住状态下）
+        setupOutsideClickMonitor()
+        
+        // 启动光标位置轮询守卫，确保离开区域后平滑收起
+        startTrackingMouseExit(button: button)
+        
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.15
             context.timingFunction = CAMediaTimingFunction(name: .easeOut)
@@ -134,8 +143,54 @@ public final class PopoverWindow: NSPanel {
         }
     }
     
+    private func setupOutsideClickMonitor() {
+        if clickMonitor == nil {
+            clickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    guard let self = self, self.isVisible else { return }
+                    if let coordinator = self.hoverCoordinator, !coordinator.isPinned {
+                        coordinator.dismissImmediately()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func startTrackingMouseExit(button: NSStatusBarButton) {
+        mouseCheckTimer?.invalidate()
+        mouseCheckTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self, weak button] timer in
+            Task { @MainActor [weak self, weak button] in
+                guard let self = self, let button = button, self.isVisible else {
+                    timer.invalidate()
+                    return
+                }
+                guard let coordinator = self.hoverCoordinator, !coordinator.isPinned else { return }
+                
+                let mouseLoc = NSEvent.mouseLocation
+                let buttonFrame = button.window?.convertToScreen(button.bounds) ?? .zero
+                
+                // 允许 14px 容差缓冲区（移动过程中不发生闪烁）
+                let hudBounds = self.frame.insetBy(dx: -14, dy: -14)
+                let buttonBounds = buttonFrame.insetBy(dx: -8, dy: -8)
+                
+                let isInside = hudBounds.contains(mouseLoc) || buttonBounds.contains(mouseLoc)
+                if !isInside {
+                    coordinator.onButtonMouseExit()
+                    coordinator.onHUDMouseExit()
+                }
+            }
+        }
+    }
+    
     /// 退出淡出动画
     public func hideWithFade() {
+        mouseCheckTimer?.invalidate()
+        mouseCheckTimer = nil
+        if let monitor = clickMonitor {
+            NSEvent.removeMonitor(monitor)
+            clickMonitor = nil
+        }
+        
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = 0.15
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
@@ -146,7 +201,11 @@ public final class PopoverWindow: NSPanel {
     }
     
     deinit {
+        mouseCheckTimer?.invalidate()
         if let monitor = eventMonitor {
+            NSEvent.removeMonitor(monitor)
+        }
+        if let monitor = clickMonitor {
             NSEvent.removeMonitor(monitor)
         }
     }

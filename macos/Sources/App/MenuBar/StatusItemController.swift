@@ -43,7 +43,6 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
     
     private func setupStatusItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.autosaveName = NSStatusItem.AutosaveName("KimiPocketStatusItem")
         self.statusItem = item
         
         if let button = item.button {
@@ -62,12 +61,6 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
             )
             button.addTrackingArea(area)
             self.trackingArea = area
-            
-            // 启动后延迟 0.8 秒：若就绪则向用户平滑亮起浮窗，引导用户定位顶栏图标位置
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { [weak self] in
-                guard let self = self, let button = self.statusItem?.button else { return }
-                self.popoverWindow?.showAnchored(to: button)
-            }
         }
     }
     

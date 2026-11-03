@@ -126,6 +126,7 @@ let normalized = KimiClient.normalizeUsageData(subResp: mockSub, usageResp: mock
 // 校验套餐
 assert(normalized.plan.title == "Kimi Pro", "Plan title must be Kimi Pro")
 assert(normalized.plan.isActive, "Plan must be active")
+assert(normalized.plan.formattedExpirySubtitle.hasPrefix("到期时间: 2026-"), "Expiry subtitle must be formatted with date prefix")
 
 // 校验 5小时额度
 assert(normalized.rolling5h.limit == 60, "Rolling limit must be 60")
