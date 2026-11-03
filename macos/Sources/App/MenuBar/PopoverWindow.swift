@@ -148,9 +148,7 @@ public final class PopoverWindow: NSPanel {
             clickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
                 Task { @MainActor [weak self] in
                     guard let self = self, self.isVisible else { return }
-                    if let coordinator = self.hoverCoordinator, !coordinator.isPinned {
-                        coordinator.dismissImmediately()
-                    }
+                    self.hoverCoordinator?.dismissImmediately()
                 }
             }
         }
@@ -164,7 +162,7 @@ public final class PopoverWindow: NSPanel {
                     timer.invalidate()
                     return
                 }
-                guard let coordinator = self.hoverCoordinator, !coordinator.isPinned else { return }
+                guard let coordinator = self.hoverCoordinator else { return }
                 
                 let mouseLoc = NSEvent.mouseLocation
                 let buttonFrame = button.window?.convertToScreen(button.bounds) ?? .zero

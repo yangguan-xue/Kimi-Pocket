@@ -7,13 +7,11 @@ print("🚀 Running Kimi Pocket Core & MenuBar Test Suite...")
 assert(KimiPocketCoreInfo.version == "0.2.0", "Core version must be 0.2.0")
 print("✅ Core version check passed.")
 
-// 2. 悬停防抖状态机 (HoverCoordinator) 自动化测试
+// 2. 悬停防抖状态机 (HoverCoordinator) 自动化测试 (纯即时悬停模型)
 @MainActor
 final class MockHoverDelegate: HoverCoordinatorDelegate {
     var showCount = 0
     var hideCount = 0
-    var pinCount = 0
-    var lastPinned = false
     
     func hoverCoordinatorShouldShowHUD(_ coordinator: HoverCoordinator) {
         showCount += 1
@@ -21,11 +19,6 @@ final class MockHoverDelegate: HoverCoordinatorDelegate {
     
     func hoverCoordinatorShouldHideHUD(_ coordinator: HoverCoordinator) {
         hideCount += 1
-    }
-    
-    func hoverCoordinatorPinStateDidChange(_ coordinator: HoverCoordinator, isPinned: Bool) {
-        pinCount += 1
-        lastPinned = isPinned
     }
 }
 
@@ -37,7 +30,6 @@ func testCoordinator() {
 
     assert(!coordinator.isHoveringButton, "Initial isHoveringButton must be false")
     assert(!coordinator.isHUDVisible, "Initial isHUDVisible must be false")
-    assert(!coordinator.isPinned, "Initial isPinned must be false")
 
     coordinator.onButtonMouseEnter()
     Thread.sleep(forTimeInterval: 0.05)
@@ -54,11 +46,9 @@ func testCoordinator() {
     assert(delegate.showCount == 1, "Dwell >=180ms must trigger showHUD once")
     print("✅ Dwell trigger (>=180ms) test passed.")
 
-    coordinator.togglePin()
-    assert(coordinator.isPinned, "Coordinator must be pinned")
     coordinator.dismissImmediately()
     assert(!coordinator.isHUDVisible, "HUD must be dismissed")
-    print("✅ Pin & Dismiss immediately test passed.")
+    print("✅ Dismiss immediately test passed.")
 }
 
 MainActor.assumeIsolated {

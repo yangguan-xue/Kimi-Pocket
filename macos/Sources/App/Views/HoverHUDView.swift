@@ -3,20 +3,14 @@ import KimiPocketCore
 
 public struct HoverHUDView: View {
     @ObservedObject public var store: UsageStore
-    public let isPinned: Bool
-    public let onTogglePin: () -> Void
     public let onOpenPreferences: () -> Void
     
     @MainActor
     public init(
         store: UsageStore,
-        isPinned: Bool = false,
-        onTogglePin: @escaping () -> Void = {},
         onOpenPreferences: @escaping () -> Void = {}
     ) {
         self.store = store
-        self.isPinned = isPinned
-        self.onTogglePin = onTogglePin
         self.onOpenPreferences = onOpenPreferences
     }
     
@@ -152,27 +146,15 @@ public struct HoverHUDView: View {
                 
                 Spacer()
                 
-                HStack(spacing: 8) {
-                    Button(action: onTogglePin) {
-                        HStack(spacing: 3) {
-                            Text(isPinned ? "已固定" : "钉住")
-                            Image(systemName: isPinned ? "pin.fill" : "pin")
-                        }
-                        .font(.system(size: 10.5))
-                        .foregroundColor(isPinned ? Color(red: 0.0, green: 0.90, blue: 1.0) : Color(red: 0.8, green: 0.84, blue: 0.88))
-                        .padding(EdgeInsets(top: 2, leading: 6, bottom: 2, trailing: 6))
-                        .background(Color.white.opacity(isPinned ? 0.12 : 0.06))
+                Button(action: onOpenPreferences) {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 11.5))
+                        .foregroundColor(Color(red: 0.6, green: 0.65, blue: 0.72))
+                        .padding(EdgeInsets(top: 3, leading: 6, bottom: 3, trailing: 6))
+                        .background(Color.white.opacity(0.06))
                         .cornerRadius(4)
-                    }
-                    .buttonStyle(.plain)
-                    
-                    Button(action: onOpenPreferences) {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 11))
-                            .foregroundColor(Color(red: 0.6, green: 0.65, blue: 0.72))
-                    }
-                    .buttonStyle(.plain)
                 }
+                .buttonStyle(.plain)
             }
         }
         .padding(14)

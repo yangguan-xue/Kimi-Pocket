@@ -70,10 +70,6 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
         
         let hudView = HoverHUDView(
             store: store,
-            isPinned: hoverCoordinator.isPinned,
-            onTogglePin: { [weak self] in
-                self?.hoverCoordinator.togglePin()
-            },
             onOpenPreferences: { [weak self] in
                 self?.openPreferencesAction()
             }
@@ -104,7 +100,7 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
         if currentEvent.type == .rightMouseUp {
             showContextMenu()
         } else {
-            hoverCoordinator.togglePin()
+            hoverCoordinator.toggleVisibility()
         }
     }
     
@@ -121,17 +117,9 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
         popoverWindow?.hideWithFade()
     }
     
-    public func hoverCoordinatorPinStateDidChange(_ coordinator: HoverCoordinator, isPinned: Bool) {
-        updateHUDViewContent()
-    }
-    
     private func updateHUDViewContent() {
         let hudView = HoverHUDView(
             store: store,
-            isPinned: hoverCoordinator.isPinned,
-            onTogglePin: { [weak self] in
-                self?.hoverCoordinator.togglePin()
-            },
             onOpenPreferences: { [weak self] in
                 self?.openPreferencesAction()
             }
@@ -147,14 +135,6 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
         let refreshItem = NSMenuItem(title: "立即刷新", action: #selector(refreshAction), keyEquivalent: "r")
         refreshItem.target = self
         menu.addItem(refreshItem)
-        
-        let pinItem = NSMenuItem(
-            title: hoverCoordinator.isPinned ? "取消固定" : "固定看板",
-            action: #selector(togglePinAction),
-            keyEquivalent: "p"
-        )
-        pinItem.target = self
-        menu.addItem(pinItem)
         
         menu.addItem(NSMenuItem.separator())
         
@@ -175,10 +155,6 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
     
     @objc private func refreshAction() {
         store.refreshImmediately()
-    }
-    
-    @objc private func togglePinAction() {
-        hoverCoordinator.togglePin()
     }
     
     @objc public func openPreferencesAction() {

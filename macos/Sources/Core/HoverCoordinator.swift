@@ -5,21 +5,19 @@ import Foundation
 public protocol HoverCoordinatorDelegate: AnyObject {
     func hoverCoordinatorShouldShowHUD(_ coordinator: HoverCoordinator)
     func hoverCoordinatorShouldHideHUD(_ coordinator: HoverCoordinator)
-    func hoverCoordinatorPinStateDidChange(_ coordinator: HoverCoordinator, isPinned: Bool)
 }
 
 @MainActor
 public final class HoverCoordinator: NSObject {
     public weak var delegate: HoverCoordinatorDelegate?
     
-    // 状态配置参数 (来自 SPEC-06)
-    public let hoverDwellThreshold: TimeInterval = 0.18 // 180ms
-    public let exitGracePeriod: TimeInterval = 0.25     // 250ms
+    // 状态配置参数 (纯粹的即时悬停模型)
+    public let hoverDwellThreshold: TimeInterval = 0.18 // 180ms 激活防抖
+    public let exitGracePeriod: TimeInterval = 0.25     // 250ms 离开容错缓冲
     
-    // 交互状态
+    // 交互状态 (彻底移除 Pin，纯即时悬停)
     public private(set) var isHoveringButton = false
     public private(set) var isHoveringHUD = false
-    public private(set) var isPinned = false
     public private(set) var isHUDVisible = false
     
     private var dwellTimer: Timer?
@@ -69,23 +67,14 @@ public final class HoverCoordinator: NSObject {
         scheduleExitCheck()
     }
     
-    // MARK: - 点击与模式切换
+    // MARK: - 显隐控制 (非锁定，单纯开关)
     
-    public func togglePin() {
-        isPinned.toggle()
-        delegate?.hoverCoordinatorPinStateDidChange(self, isPinned: isPinned)
-        
-        if isPinned && !isHUDVisible {
+    public func toggleVisibility() {
+        if isHUDVisible {
+            dismissImmediately()
+        } else {
             showHUD()
-        } else if !isPinned && !isHoveringButton && !isHoveringHUD {
-            hideHUD()
         }
-    }
-    
-    public func setPinned(_ pinned: Bool) {
-        guard isPinned != pinned else { return }
-        isPinned = pinned
-        delegate?.hoverCoordinatorPinStateDidChange(self, isPinned: isPinned)
     }
     
     public func dismissImmediately() {
@@ -93,7 +82,6 @@ public final class HoverCoordinator: NSObject {
         dwellTimer = nil
         exitTimer?.invalidate()
         exitTimer = nil
-        isPinned = false
         hideHUD()
     }
     
@@ -106,19 +94,19 @@ public final class HoverCoordinator: NSObject {
     }
     
     private func hideHUD() {
-        guard isHUDVisible, !isPinned else { return }
+        guard isHUDVisible else { return }
         isHUDVisible = false
         delegate?.hoverCoordinatorShouldHideHUD(self)
     }
     
     private func scheduleExitCheck() {
-        guard isHUDVisible, !isPinned else { return }
+        guard isHUDVisible else { return }
         
         exitTimer?.invalidate()
         exitTimer = Timer.scheduledTimer(withTimeInterval: exitGracePeriod, repeats: false) { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self = self else { return }
-                if !self.isHoveringButton && !self.isHoveringHUD && !self.isPinned {
+                if !self.isHoveringButton && !self.isHoveringHUD {
                     self.hideHUD()
                 }
             }
