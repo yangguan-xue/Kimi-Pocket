@@ -16,6 +16,11 @@
 | **[Task 05](./phase-3-ui-engine/task-05-responsive-shell.md)** | 整合响应式外壳、Token 输入与全局状态生命周期 | SPEC-01, 03 | `src/App.tsx`, `src/hooks/useKimiUsage.ts` | ✅ 已验收 |
 | **[Task 06](./phase-4-android-pwa/task-06-pwa-android.md)** | 配置 Android PWA Web App Manifest、图标与屏幕常亮特性 | SPEC-04 | `manifest.webmanifest`, Service Worker, PWA 图标 | ✅ 已验收 (Build输出SW) |
 | **[Task 07](./phase-4-android-pwa/task-07-capacitor-apk.md)** | 集成 Capacitor 原生 Android 工程与 GitHub Actions 自动打包流水线 | SPEC-05 | `android/`, `build-apk.yml`, `CapacitorHttp` | ✅ 已配置并就绪 |
+| **[Task 08](./phase-5-macos-menubar/task-08-project-init-statusitem.md)** | 初始化 macOS 原生工程骨架与状态栏控制器 (SPM + NSStatusItem) | SPEC-06 | `macos/Package.swift`, `StatusItemController` | ⏳ 待开始 |
+| **[Task 09](./phase-5-macos-menubar/task-09-hover-popover-window.md)** | 悬停防抖状态机与毛玻璃无边框浮窗 (HoverCoordinator + PopoverWindow) | SPEC-06 | `HoverCoordinator.swift`, `PopoverWindow.swift` | ⏳ 待开始 |
+| **[Task 10](./phase-5-macos-menubar/task-10-core-data-keychain.md)** | 原生 Swift 数据核心与 Keychain 安全存储 (KimiClient + Keychain + Store) | SPEC-02, 06 | `KimiClient.swift`, `UsageStore.swift`, 单元测试 | ⏳ 待开始 |
+| **[Task 11](./phase-5-macos-menubar/task-11-hud-views-preferences.md)** | 构建 Obsidian Dark 纯净版悬停 HUD 与偏好设置面板 (HoverHUDView + Preferences) | SPEC-06 | `HoverHUDView.swift`, 纯净文案卡片组件 | ⏳ 待开始 |
+| **[Task 12](./phase-5-macos-menubar/task-12-packaging-e2e.md)** | macOS 端一键构建、打包脚本与端到端验收 (Build & Release Packaging) | SPEC-06 | `build-macos.sh`, `Kimi Pocket.app` | ⏳ 待开始 |
 
 ---
 
