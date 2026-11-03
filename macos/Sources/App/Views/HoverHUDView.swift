@@ -89,6 +89,24 @@ public struct HoverHUDView: View {
                     .tint(Color(red: 0.0, green: 0.7, blue: 0.9))
                 }
                 .frame(maxWidth: .infinity, minHeight: 180)
+            } else if let error = store.errorMessage, store.usageState == nil {
+                VStack(spacing: 12) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 24))
+                        .foregroundColor(Color(red: 0.96, green: 0.62, blue: 0.04))
+                    
+                    Text(error)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                    
+                    Button("更新 Token") {
+                        onOpenPreferences()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color(red: 0.0, green: 0.7, blue: 0.9))
+                }
+                .frame(maxWidth: .infinity, minHeight: 180)
             } else if let state = store.usageState {
                 // 核心 1：5小时额度 (连续平滑单条)
                 RollingQuotaRow(info: state.rolling5h)

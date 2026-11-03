@@ -84,12 +84,16 @@ public final class StatusItemController: NSObject, HoverCoordinatorDelegate {
     
     // MARK: - 鼠标事件转发到 HoverCoordinator
     
-    @objc public func mouseEntered(with event: NSEvent) {
-        hoverCoordinator.onButtonMouseEnter()
+    @objc nonisolated public func mouseEntered(with event: NSEvent) {
+        Task { @MainActor [weak self] in
+            self?.hoverCoordinator.onButtonMouseEnter()
+        }
     }
     
-    @objc public func mouseExited(with event: NSEvent) {
-        hoverCoordinator.onButtonMouseExit()
+    @objc nonisolated public func mouseExited(with event: NSEvent) {
+        Task { @MainActor [weak self] in
+            self?.hoverCoordinator.onButtonMouseExit()
+        }
     }
     
     // MARK: - 按钮点击
