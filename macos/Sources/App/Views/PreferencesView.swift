@@ -42,9 +42,20 @@ public struct PreferencesView: View {
                     .font(.caption)
                     .foregroundColor(.gray)
                 
-                SecureField("粘贴从 kimi.com 获取的 access_token", text: $inputToken)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.system(size: 12, design: .monospaced))
+                HStack(spacing: 8) {
+                    SecureField("粘贴从 kimi.com 获取的 access_token", text: $inputToken)
+                        .textFieldStyle(.roundedBorder)
+                        .font(.system(size: 12, design: .monospaced))
+                    
+                    Button(action: pasteFromClipboard) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "doc.on.clipboard")
+                            Text("粘贴")
+                        }
+                        .font(.system(size: 12))
+                    }
+                    .buttonStyle(.bordered)
+                }
                 
                 // 实时预检提示
                 if !inputToken.isEmpty {
@@ -123,6 +134,12 @@ public struct PreferencesView: View {
         
         if #available(macOS 13.0, *) {
             self.launchAtLogin = (SMAppService.mainApp.status == .enabled)
+        }
+    }
+    
+    private func pasteFromClipboard() {
+        if let str = NSPasteboard.general.string(forType: .string) {
+            self.inputToken = str.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
     
