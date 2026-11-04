@@ -121,6 +121,12 @@ React 19 · TypeScript · Vite 6 · Tailwind CSS · Capacitor 7 · vite-plugin-p
 
 基于 [MIT License](LICENSE) 开源。
 
+## macOS 原生状态栏端
+
+[下载 macOS v0.2.0 发布版](https://github.com/yangguan-xue/Kimi-Pocket/releases/tag/macos-v0.2.0)（适用于 Apple Silicon macOS 14+）。提供 DMG 镜像与 ZIP 便携包。
+
+基于 Swift 6 + SwiftUI + AppKit 打造的系统级状态栏轻量常驻工具。鼠标悬停顶栏 ✨ 图标（>180ms）即刻平滑展开 Obsidian Dark 毛玻璃浮窗，移开即自动淡出收起，纯即时无感交互；支持 5小时、周用量与套餐到期时间精准监控，集成三级色彩动态预警与系统钥匙串（Keychain）硬件安全存储。
+
 ## Windows 原生托盘端
 
 [下载 Windows v0.1.0 预览版](https://github.com/yangguan-xue/Kimi-Pocket/releases/tag/windows-v0.1.0)（Windows 11 x64，解压运行，无需单独安装 .NET）。
