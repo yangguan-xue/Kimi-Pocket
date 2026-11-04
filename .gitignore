@@ -40,3 +40,8 @@ dist-macos/
 .vscode/
 *.swp
 *.swo
+
+# Windows native app
+windows/**/bin/
+windows/**/obj/
+dist-windows/

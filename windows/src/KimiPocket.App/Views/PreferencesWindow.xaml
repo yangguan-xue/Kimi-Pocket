@@ -1,0 +1,14 @@
+<Window x:Class="KimiPocket.App.Views.PreferencesWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Kimi Pocket · 设置" Width="420" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="{DynamicResource Surface}" Foreground="{DynamicResource Primary}">
+ <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="24">
+ <TextBlock Text="Kimi Pocket" FontSize="20" FontWeight="SemiBold"/><TextBlock Text="随时查看你的 Kimi Code 额度" Foreground="{DynamicResource Secondary}" Margin="0,6,0,24"/>
+ <TextBlock Text="浏览器 access_token" Margin="0,0,0,8"/>
+ <PasswordBox x:Name="TokenBox" AutomationProperties.Name="浏览器 access_token"/><TextBox x:Name="VisibleTokenBox" Visibility="Collapsed" AutomationProperties.Name="显示的 access_token"/>
+ <CheckBox x:Name="RevealBox" Content="临时显示 Token" Checked="RevealChanged" Unchecked="RevealChanged"/>
+ <TextBlock Text="在 kimi.com 登录后，从浏览器开发者工具的本地存储中复制 access_token。凭据仅保存在本机 Windows 凭据管理器。" FontSize="11" Foreground="{DynamicResource Muted}" Margin="0,12,0,0"/>
+ <StackPanel Orientation="Horizontal" Margin="0,18,0,0"><Button x:Name="SaveButton" Content="保存并验证" Click="SaveClick" BorderThickness="1" Padding="12,7"/><Button x:Name="DeleteButton" Content="删除已保存凭据" Click="DeleteClick" Margin="8,0,0,0" BorderThickness="1"/></StackPanel>
+ <TextBlock x:Name="ResultText" TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource Secondary}" Margin="0,12,0,0" AutomationProperties.LiveSetting="Polite"/>
+ <Border Height="1" Background="{DynamicResource Edge}" Margin="0,20,0,4"/>
+ <CheckBox x:Name="StartupBox" Content="登录 Windows 时启动" Click="StartupClick"/>
+ <TextBlock x:Name="StartupHint" Text="可将图标拖到任务栏通知区域，方便随时查看。" FontSize="11" Foreground="{DynamicResource Muted}" Margin="0,12,0,0"/>
+ <Grid Margin="0,24,0,0"><TextBlock Text="版本 0.1.0" FontSize="11" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/><Button Content="完成" HorizontalAlignment="Right" Click="DoneClick"/></Grid>
+ </StackPanel></ScrollViewer></Window>

@@ -120,3 +120,11 @@ React 19 · TypeScript · Vite 6 · Tailwind CSS · Capacitor 7 · vite-plugin-p
 ## 许可证
 
 基于 [MIT License](LICENSE) 开源。
+
+## Windows 原生托盘端
+
+[下载 Windows v0.1.0 预览版](https://github.com/yangguan-xue/Kimi-Pocket/releases/tag/windows-v0.1.0)（Windows 11 x64，解压运行，无需单独安装 .NET）。
+
+首版现已提供 WPF 原生工程。按已确认的示意图实现黑灰白实色面板：悬浮查看 5 小时、本周、套餐总剩余额度，支持安全保存 Token、自动刷新和托盘设置。
+
+在 Windows 上运行 `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-windows.ps1` 生成自带运行时的便携 ZIP。下载包使用、开发命令与验证范围见 [Windows 使用说明](windows/README.md)；构建及实测证据见 [Phase 6](tasks/phase-6-windows-tray/evidence/README.md)。

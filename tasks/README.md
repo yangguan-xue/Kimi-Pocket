@@ -21,6 +21,20 @@
 | **[Task 10](./phase-5-macos-menubar/task-10-core-data-keychain.md)** | 原生 Swift 数据核心与 Keychain 安全存储 (KimiClient + Keychain + Store) | SPEC-02, 06 | `KimiClient.swift`, `UsageStore.swift`, 单元测试 | ✅ 已验收 |
 | **[Task 11](./phase-5-macos-menubar/task-11-hud-views-preferences.md)** | 构建 Obsidian Dark 纯净版悬停 HUD 与偏好设置面板 (HoverHUDView + Preferences) | SPEC-06 | `HoverHUDView.swift`, 纯净文案卡片组件 | ✅ 已验收 |
 | **[Task 12](./phase-5-macos-menubar/task-12-packaging-e2e.md)** | macOS 端一键构建、打包脚本与端到端验收 (Build & Release Packaging) | SPEC-06 | `build-macos.sh`, `Kimi Pocket.app` | ✅ 已验收 |
+| **[Task 13](./phase-6-windows-tray/task-13-project-bootstrap.md)** | Windows 工程与可验证构建入口 | SPEC-07 | 见任务交付物与验证命令 | ✅ 工程验证通过 |
+| **[Task 14](./phase-6-windows-tray/task-14-native-tray-host.md)** | 原生托盘图标与退出闭环 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 15](./phase-6-windows-tray/task-15-reference-panel.md)** | 按已确认示意图还原额度面板 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 16](./phase-6-windows-tray/task-16-hover-state-machine.md)** | 悬浮展开与离开收起闭环 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 17](./phase-6-windows-tray/task-17-dpi-popup-placement.md)** | 多屏定位与任务栏溢出区适配 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 18](./phase-6-windows-tray/task-18-usage-data-contracts.md)** | 真实额度模型与响应归一化 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 19](./phase-6-windows-tray/task-19-http-usage-client.md)** | 直连接口与独立分区错误处理 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 20](./phase-6-windows-tray/task-20-token-preferences.md)** | 凭据配置与首次真实额度验证 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 21](./phase-6-windows-tray/task-21-refresh-scheduler.md)** | 去重刷新与恢复调度 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 22](./phase-6-windows-tray/task-22-live-panel-states.md)** | 真实数据面板与异常状态闭环 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 23](./phase-6-windows-tray/task-23-keyboard-accessibility.md)** | 键盘入口与可访问操作 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 24](./phase-6-windows-tray/task-24-app-lifecycle.md)** | 单实例与系统生命周期恢复 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 25](./phase-6-windows-tray/task-25-windows-packaging.md)** | 自包含 ZIP 构建与使用说明 | SPEC-07 | 见任务交付物与验证命令 | 已实现，待完整验收 |
+| **[Task 26](./phase-6-windows-tray/task-26-release-acceptance.md)** | 视觉回归与首版完整验收 | SPEC-07 | 见任务交付物与验证命令 | 🔄 验收进行中 |
 
 ---
 
@@ -29,3 +43,11 @@
 - **自动化测试 (Web & Core)**：`npm test` 全量通过 18 项单元测试；`swift run TestRunner` 全量通过状态机、JWT、KimiClient 归一化与 Keychain 单元测试。
 - **编译与打包 (macOS)**：`npm run build:macos` 单命令通过 Release 编译、组装 App Bundle、Ad-Hoc 签名并输出 `dist-macos/Kimi Pocket.app`。
 - **CI/CD 流水线**：推送即可由 GitHub 官方云端自动编译出 `Kimi-Pocket-latest.apk`。
+
+
+## Windows 阶段计划（Phase 6）
+
+- [任务计划、依赖与检查点](./phase-6-windows-tray/README.md)
+- [SPEC-07：Windows 托盘应用](../specs/SPEC-07-windows-tray-app.md)
+- [用户已确认的视觉基准](../specs/assets/windows-tray/README.md)
+- **当前进度**：Windows 首版已实现并打包；Release 零警告、零错误，75 项测试通过，解压 EXE 本机启动通过。Task 26 保持验收进行中，真实账号与多屏/系统交互待测，详见 [实施证据](./phase-6-windows-tray/evidence/README.md)。

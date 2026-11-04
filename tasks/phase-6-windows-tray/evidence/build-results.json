@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-04",
+  "sdk": "10.0.403",
+  "runtime": "10.0.14",
+  "configuration": "Release",
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "testSuites": [
+    {
+      "suite": "Core",
+      "executed": 55,
+      "passed": 55,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "Windows",
+      "executed": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "archive": "Kimi-Pocket-windows-x64-0.1.0.zip",
+  "sha256": "2BE2769D947BCCE2E742C8129CF5E1CDA15E47E36BB1BAF869DA8749C861DB8A",
+  "zipBytes": 63232595,
+  "extractedFileCount": 413,
+  "captureCount": 12,
+  "runtimeSmoke": "Extracted executable loaded coreclr.dll from its own directory",
+  "nativeCycles": {
+    "count": 100,
+    "foregroundChanged": false,
+    "gdiBefore": 17,
+    "gdiAfter": 17,
+    "userBefore": 31,
+    "userAfter": 25
+  },
+  "releaseTag": "windows-v0.1.0",
+  "packageLicenseIncluded": true
+}
