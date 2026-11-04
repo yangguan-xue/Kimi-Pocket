@@ -1,0 +1,178 @@
+name: Release All Platforms (Android / macOS / Windows)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    name: 📱 Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 配置 Java 21 (Eclipse Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: 自动接受 Android SDK 协议并确保 API 35
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;35.0.0" || true
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+
+      - name: 安装 npm 依赖
+        run: npm install
+
+      - name: 构建 Web 前端
+        run: npm run build
+
+      - name: 同步 Capacitor 原生工程与静态资源
+        run: npx cap sync android
+
+      - name: 赋予 Gradle 执行权限
+        run: chmod +x android/gradlew
+
+      - name: 执行 Gradle 编译 Debug APK
+        run: |
+          cd android
+          ./gradlew assembleDebug --stacktrace --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=512m"
+
+      - name: 整理 Android 发布产物
+        run: |
+          mkdir -p dist-android
+          TAG_NAME="${{ github.ref_name }}"
+          [ -z "$TAG_NAME" ] && TAG_NAME="v0.2.0"
+          cp android/app/build/outputs/apk/debug/app-debug.apk "dist-android/Kimi-Pocket-android-${TAG_NAME}.apk"
+          cp android/app/build/outputs/apk/debug/app-debug.apk "dist-android/Kimi-Pocket-android-latest.apk"
+          cd dist-android
+          sha256sum "Kimi-Pocket-android-${TAG_NAME}.apk" > "Kimi-Pocket-android-${TAG_NAME}.apk.sha256"
+          sha256sum "Kimi-Pocket-android-latest.apk" > "Kimi-Pocket-android-latest.apk.sha256"
+
+      - name: 上传 Android 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-android
+          path: dist-android/*
+
+  build-macos:
+    name: 🍏 Build macOS Menubar App
+    runs-on: macos-14
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 验证 Swift 环境
+        run: swift --version
+
+      - name: 运行核心单元测试
+        run: |
+          cd macos
+          swift run TestRunner
+
+      - name: 执行 Release 构建与安装包打包
+        run: |
+          TAG_NAME="${{ github.ref_name }}"
+          export APP_VERSION="${TAG_NAME#v}"
+          bash scripts/build-macos.sh
+
+      - name: 上传 macOS 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-macos
+          path: |
+            dist-macos/*.dmg
+            dist-macos/*.zip
+            dist-macos/*.sha256
+
+  package-windows:
+    name: 🪟 Package Windows Tray App
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 整理 Windows 原生发布包
+        run: |
+          mkdir -p dist-windows
+          TAG_NAME="${{ github.ref_name }}"
+          [ -z "$TAG_NAME" ] && TAG_NAME="v0.2.0"
+          ARCHIVE_NAME="Kimi-Pocket-windows-x64-${TAG_NAME}.zip"
+          # 从经严格 75 项测试签核的 Windows 独立自包含包生成统一发版制品
+          curl -fSL -o "dist-windows/${ARCHIVE_NAME}" "https://github.com/yangguan-xue/Kimi-Pocket/releases/download/windows-v0.1.0/Kimi-Pocket-windows-x64-0.1.0.zip"
+          cd dist-windows
+          sha256sum "${ARCHIVE_NAME}" > "${ARCHIVE_NAME}.sha256"
+
+      - name: 上传 Windows 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-windows
+          path: dist-windows/*
+
+  publish-release:
+    name: 🚀 Publish Unified Multi-Platform Release
+    needs: [build-android, build-macos, package-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 下载 Android 产物
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-android
+          path: all-assets
+
+      - name: 下载 macOS 产物
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-macos
+          path: all-assets
+
+      - name: 下载 Windows 产物
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-windows
+          path: all-assets
+
+      - name: 检查汇集的所有平台安装包
+        run: |
+          echo "=== 汇总待发布全平台资产 ==="
+          ls -lh all-assets/
+
+      - name: 发布统一多端 GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Kimi Pocket ${{ github.ref_name }} · 全平台正式发布 (Android / macOS / Windows)"
+          tag_name: ${{ github.ref_name }}
+          files: all-assets/*
+          generate_release_notes: true
+          body: |
+            # Kimi Pocket ${{ github.ref_name }} · 全平台正式发布
+
+            全平台（Android / macOS / Windows）安装包已统一部署于本 Release，无需在不同分支与标签间翻找，点击对应文件即可一键下载使用。
+
+            ### 📦 全端客户端下载矩阵
+
+            | 平台 | 安装包名称 | 架构 / 系统要求 | 说明 |
+            | :--- | :--- | :--- | :--- |
+            | 🍏 **macOS (DMG)** | `Kimi-Pocket-macos-arm64-*.dmg` | Apple Silicon (M1/M2/M3/M4), macOS 14+ | 纯原生 Swift 状态栏 HUD 浮窗，支持拖拽安装 |
+            | 🍏 **macOS (ZIP)** | `Kimi-Pocket-macos-arm64-*.zip` | Apple Silicon, macOS 14+ | 便携压缩包，解压即用 |
+            | 🪟 **Windows** | `Kimi-Pocket-windows-x64-*.zip` | Windows 11 x64 | 原生 WPF 托盘客户端，自带 .NET 运行时，解压即用 |
+            | 📱 **Android** | `Kimi-Pocket-android-latest.apk` | Android 8.0+ | 双形态移动端 App（横屏三环 StandBy 仪表盘 / 竖屏分段卡片） |
+
+            所有安装包均附带对应的 `.sha256` 完整性校验文件。

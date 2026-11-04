@@ -49,7 +49,8 @@ codesign -s - --force --deep "$APP_BUNDLE" 2>/dev/null || true
 # 6. 生成 DMG 镜像与 ZIP 安装包
 echo "📦 [5/5] 正在打包 DMG 与 ZIP 发布分发包..."
 ARCH=$(uname -m)
-VERSION="0.2.0"
+RAW_VERSION="${APP_VERSION:-0.2.0}"
+VERSION="${RAW_VERSION#v}"
 DMG_NAME="Kimi-Pocket-macos-${ARCH}-${VERSION}.dmg"
 ZIP_NAME="Kimi-Pocket-macos-${ARCH}-${VERSION}.zip"
 

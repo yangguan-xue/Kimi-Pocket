@@ -44,15 +44,23 @@
   </tr>
 </table>
 
-## 快速开始
+## 全端下载 (All Platforms)
 
-<a href="https://github.com/yangguan-xue/Kimi-Pocket/releases/latest/download/Kimi-Pocket-latest.apk"><strong>下载最新 Android APK</strong></a>
+全平台安装包现已统一部署，直接点击即可下载最新版本：
 
-1. 下载并安装 APK；如系统提示，请允许安装来自当前来源的应用。
-2. 打开 Kimi Pocket，点击右上角的 Token 设置。
-3. 填入 `access_token`，可选填入 `refresh_token`，保存后即可查看用量。
+| 平台 | 形态 / 运行方式 | 架构与系统要求 | 最新安装包直接下载 |
+| :--- | :--- | :--- | :--- |
+| 🍏 **macOS** | 原生状态栏 HUD 浮窗 (纯悬停呼出) | Apple Silicon (M1/M2/M3/M4), macOS 14+ | [**下载 DMG 镜像**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) · [下载 ZIP 便携包](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
+| 🪟 **Windows** | 原生任务栏托盘面板 (自带运行时) | Windows 11 x64 (免安装解压即用) | [**下载 Windows 便携包 (ZIP)**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
+| 📱 **Android** | 原生 App (横屏三环仪表盘 / 竖屏卡片) | Android 8.0+ | [**下载最新 Android APK**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
 
-也可以前往 <a href="https://github.com/yangguan-xue/Kimi-Pocket/releases/latest">Releases</a> 查看历史版本与构建产物。
+> 完整发布记录与校验和文件见 [GitHub Releases 统一发布页](https://github.com/yangguan-xue/Kimi-Pocket/releases)。
+
+## 快速上手
+
+1. 下载并安装对应平台的客户端；
+2. 打开 Kimi Pocket，进入 Token 设置；
+3. 填入 `access_token`（可选填入 `refresh_token`），保存后即刻自动同步用量。
 
 ## 凭证配置
 
