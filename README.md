@@ -1,144 +1,269 @@
 <div align="center">
-  <h1>Kimi Pocket</h1>
-  <p><strong>把 Kimi Code 用量，装进口袋。</strong></p>
-  <p>专为移动端打造的订阅额度监控工具，支持 Android 与 PWA。</p>
 
-  <p>
-    <a href="https://github.com/yangguan-xue/Kimi-Pocket/releases/latest"><img src="https://img.shields.io/github/v/release/yangguan-xue/Kimi-Pocket?color=10B981&label=Release" alt="Release"/></a>
-    <a href="https://github.com/yangguan-xue/Kimi-Pocket/actions"><img src="https://img.shields.io/github/actions/workflow/status/yangguan-xue/Kimi-Pocket/build-apk.yml?branch=main&label=Build" alt="Build Status"/></a>
-    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-262626" alt="License: MIT"/></a>
-  </p>
+# Kimi Pocket
 
-  <img src="docs/assets/readme-hero.png" alt="Kimi Pocket 深色额度仪表盘主视觉" width="100%"/>
+<p><strong>Carry your Kimi Code quota in your pocket.</strong></p>
+<p>An ultra-lightweight, cross-platform subscription and quota monitor for Kimi Code.<br/>Natively crafted for <strong>macOS Menubar HUD</strong> · <strong>Windows System Tray</strong> · <strong>Android App</strong> · <strong>Mobile PWA</strong>.</p>
 
-  <p>
-    <a href="#快速开始">快速开始</a> ·
-    <a href="#界面预览">界面预览</a> ·
-    <a href="#凭证配置">凭证配置</a> ·
-    <a href="#本地开发">本地开发</a>
-  </p>
+<p>
+  <a href="./README.md"><strong>English</strong></a> ·
+  <a href="./README_CN.md">简体中文</a>
+</p>
+
+<p>
+  <a href="https://github.com/yangguan-xue/Kimi-Pocket/releases/latest"><img src="https://img.shields.io/github/v/release/yangguan-xue/Kimi-Pocket?color=10B981&label=Release" alt="Release"/></a>
+  <a href="https://github.com/yangguan-xue/Kimi-Pocket/actions"><img src="https://img.shields.io/github/actions/workflow/status/yangguan-xue/Kimi-Pocket/release.yml?branch=main&label=CI%20Build" alt="Build Status"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"/></a>
+  <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Android%20%7C%20PWA-262626" alt="Platforms"/>
+  <img src="https://img.shields.io/badge/Privacy-Local--First%20%2F%20Zero--Relay-059669" alt="Zero Relay Security"/>
+</p>
+
+<p>
+  <a href="#overview">Overview</a> •
+  <a href="#key-features">Key Features</a> •
+  <a href="#downloads">Downloads</a> •
+  <a href="#architecture--privacy">Architecture</a> •
+  <a href="#credential-configuration">Credentials</a> •
+  <a href="#refresh-strategy">Refresh Strategy</a> •
+  <a href="#development--build">Development</a> •
+  <a href="#license">License</a>
+</p>
+
 </div>
 
-## 少一点查询，多一点掌控
+---
 
-无需打开浏览器控制台，也不必反复翻查订阅页面。Kimi Pocket 将总额度、周额度、5 小时窗口和重置时间浓缩到一个纯黑界面中，让剩余量与恢复时间一眼可见。
+## Overview
 
-- **双形态布局**：竖屏使用分段卡片，横屏切换为三环仪表盘，而不是简单拉伸页面。
-- **状态一眼可辨**：正常、紧张、告急分别使用翡翠绿、琥珀黄与红色提示。
-- **自适应刷新**：根据最低剩余额度调整轮询间隔，回到前台时立即更新。
-- **静默续期**：可选填入 `refresh_token`，在访问凭证临期或鉴权失效时尝试自动换新。
-- **移动端细节**：支持沉浸式全屏、剪贴板一键粘贴，以及软键盘弹起时仍可操作的凭证弹窗。
+When developing intensively with Kimi Code (Moonshot AI), developers constantly need to monitor three critical quota metrics:
+- **5-Hour Rolling Request Window** and its exact reset countdown.
+- **Weekly Quota** consumption and renewal schedule.
+- **Subscription Balance** package validity and expiration date.
 
-## 界面预览
+Traditionally, checking these numbers requires interrupting your workflow, logging into the web dashboard, or opening browser DevTools to inspect network requests. **Kimi Pocket** brings these metrics directly into your desktop status bar, system tray, or mobile lock screen with instant visibility and zero mental friction.
 
-<table>
-  <tr>
-    <td width="38%" align="center" valign="middle">
-      <strong>竖屏 · 分段卡片</strong><br/><br/>
-      <img src="preview-ui-v2.jpg" alt="竖屏卡片模式" width="92%"/>
-    </td>
-    <td width="62%" align="center" valign="middle">
-      <strong>横屏 · 三环 HUD</strong><br/><br/>
-      <img src="preview-ui-landscape.jpg" alt="横屏三环仪表盘" width="100%"/>
-    </td>
-  </tr>
-</table>
+---
 
-## 全端下载 (All Platforms)
+## Key Features
 
-全平台安装包现已统一部署，直接点击即可下载最新版本：
+### 🍏 macOS Native Menubar HUD
+- **Zero-Click Hover HUD**: Hover over the menubar icon (>180ms debounce) to instantly expand an Obsidian Dark frosted-glass HUD; moving the cursor away smoothly dismisses it.
+- **Ultra-Lightweight & Efficient**: Engineered with Swift 6 + SwiftUI + AppKit. Consumes 0% idle CPU and maintains a steady memory footprint of under 25MB.
+- **Hardware-Level Security**: Credentials are encrypted directly inside macOS Keychain — never stored in plaintext config files.
+- **Dynamic Status Indicator**: Status bar icon dynamically displays status badges and color-coded alert states.
 
-| 平台 | 形态 / 运行方式 | 架构与系统要求 | 最新安装包直接下载 |
+### 🪟 Windows Native Taskbar Tray
+- **Restrained Dark Aesthetic**: Built natively with .NET and WPF, featuring a high-contrast, fully opaque dark theme with system-native typography.
+- **Seamless Hover Experience**: Zero-click tray expansion and auto-dismiss on cursor leave; full keyboard accessibility via `Win+B`, `Tab`, and `Esc`.
+- **Self-Contained Deployment**: Ships with an embedded .NET runtime inside a single portable ZIP — extract and run with zero external runtime prerequisites.
+- **Credential Protection**: Uses Windows Credential Manager for secure, encrypted token persistence.
+
+### 📱 Android Native App & Mobile PWA
+- **Responsive Dual-Mode UI**:
+  - **Portrait Mode**: Three vertical segmented cards (4-segment total bar, 7-segment weekly bar, smooth rolling 5-hour bar with live countdown).
+  - **Landscape Mode**: StandBy-inspired dashboard powered by precise SVG math (4-arc total ring, 7-arc weekly ring, continuous 5-hour ring).
+- **Mobile-First UX**: One-tap clipboard token import, intelligent layout adjustment when the virtual keyboard appears, and immersive fullscreen display.
+- **Offline Snapshot Resilience**: Retains and displays the last known good snapshot during network hiccups or temporary disconnections.
+
+### ⚡ Core Engine & Smart Polling
+- **Dynamic Heartbeat Polling**: Automatically adjusts poll intervals based on lowest remaining quota (60s Normal / 30s Warning / 15s Critical); pauses in the background to preserve battery and refreshes immediately when returning to the foreground.
+- **Silent Background Token Rotation**: Supports optional `refresh_token` to automatically rotate expired `access_token` credentials without user interruption.
+- **Zero-Relay Privacy**: Direct HTTPS communication between your device and Moonshot's official servers. No middleman proxies, no analytics, no user tracking.
+
+---
+
+## Downloads
+
+Official multi-platform installation packages are published on GitHub Releases:
+
+| Platform | Form Factor | Architecture & Requirements | Direct Download |
 | :--- | :--- | :--- | :--- |
-| 🍏 **macOS** | 原生状态栏 HUD 浮窗 (纯悬停呼出) | Apple Silicon (M1/M2/M3/M4), macOS 14+ | [**下载 DMG 镜像**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) · [下载 ZIP 便携包](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
-| 🪟 **Windows** | 原生任务栏托盘面板 (自带运行时) | Windows 11 x64 (免安装解压即用) | [**下载 Windows 便携包 (ZIP)**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
-| 📱 **Android** | 原生 App (横屏三环仪表盘 / 竖屏卡片) | Android 8.0+ | [**下载最新 Android APK**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
+| 🍏 **macOS** | Native Menubar HUD (Hover Trigger) | Apple Silicon (M1/M2/M3/M4), macOS 14+ | [**Download DMG**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) · [Download Portable ZIP](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
+| 🪟 **Windows** | Native System Tray Panel (Embedded Runtime) | Windows 11 x64 (Portable, No Install) | [**Download Portable ZIP**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
+| 📱 **Android** | Native App (Landscape HUD / Portrait Cards) | Android 8.0+ | [**Download Android APK**](https://github.com/yangguan-xue/Kimi-Pocket/releases/latest) |
+| 🌐 **Web / PWA** | Browser App / Add to Home Screen | Modern Mobile & Desktop Browsers | [Self-Host / Build from Source](#development--build) |
 
-> 完整发布记录与校验和文件见 [GitHub Releases 统一发布页](https://github.com/yangguan-xue/Kimi-Pocket/releases)。
+> Checksums (SHA256) and detailed release changelogs are available on the [GitHub Releases Page](https://github.com/yangguan-xue/Kimi-Pocket/releases).
 
-## 快速上手
+---
 
-1. 下载并安装对应平台的客户端；
-2. 打开 Kimi Pocket，进入 Token 设置；
-3. 填入 `access_token`（可选填入 `refresh_token`），保存后即刻自动同步用量。
+## Architecture & Privacy
 
-## 凭证配置
+Kimi Pocket strictly adheres to **Local-First** and **Zero-Relay** principles:
 
-在电脑浏览器中登录 <a href="https://kimi.moonshot.cn/">Kimi 官网</a>，打开开发者工具的 **Application → Local Storage → `https://kimi.moonshot.cn`**，复制以下字段：
+```
+┌────────────────────────────────────────────────────────┐
+│             Client (macOS / Windows / Android)         │
+│                                                        │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │                    UI Layer                      │  │
+│  │  - macOS: SwiftUI + AppKit                       │  │
+│  │  - Windows: WPF + Win32 NotifyIcon               │  │
+│  │  - Android / Web: React 19 + Tailwind CSS        │  │
+│  └────────────────────────┬─────────────────────────┘  │
+│                           │                            │
+│                           ▼                            │
+│  ┌──────────────────────────────────────────────────┐  │
+│  │             Native Secure Key Storage            │  │
+│  │  - macOS Keychain / Windows Credential Manager   │  │
+│  │  - Android EncryptedStorage / LocalStorage       │  │
+│  └────────────────────────┬─────────────────────────┘  │
+└───────────────────────────┼────────────────────────────┘
+                            │ Direct HTTPS Request (Bearer Token)
+                            ▼
+┌────────────────────────────────────────────────────────┐
+│              Official Moonshot Kimi API                │
+│                                                        │
+│  • GET  /apiv2/usages        (Total, weekly, 5-hour)   │
+│  • GET  /apiv2/subscription  (Package tier, validity) │
+│  • POST /apiv2/token/refresh (Silent token rotation)   │
+└────────────────────────────────────────────────────────┘
+```
 
-| 字段 | 是否必填 | 用途 |
-| --- | --- | --- |
-| `access_token` | 是 | 当前接口鉴权 |
-| `refresh_token` | 否，推荐 | 自动续期访问凭证 |
+- **Tokens Stay on Device**: Authentication credentials are stored strictly within OS-level secure storage and only sent directly to official Moonshot endpoints.
+- **Direct Connectivity**: Desktop clients utilize OS network stacks (Swift `URLSession` / .NET `HttpClient`) directly, bypassing browser CORS restrictions without intermediary proxy servers.
 
-将凭证粘贴到应用的 Token 设置中并保存。`refresh_token` 失效、被撤销或续期接口拒绝请求时，仍需重新配置。
+---
 
-> 凭证属于敏感信息，请勿分享给他人。凭证保存在设备本地 LocalStorage，仅用于请求 Kimi 官方接口；本项目没有自建中转服务器，也不会主动收集使用日志。
+## Credential Configuration
 
-## 刷新策略
+Kimi Pocket requires your Kimi authorization tokens to fetch quota metrics. Follow these steps:
 
-应用按三类额度中的最低剩余比例自动调整频率：
+1. Log into your account on [Kimi Official Site](https://kimi.moonshot.cn/) in a desktop browser;
+2. Press `F12` (or right-click → **Inspect**) to open Developer Tools, then navigate to the **Application** tab;
+3. In the left panel, expand **Storage → Local Storage**, and click `https://kimi.moonshot.cn`;
+4. Locate and copy the following keys:
 
-| 当前状态 | 刷新间隔 |
-| --- | --- |
-| 正常 | 60 秒 |
-| 任一额度剩余不超过 30% | 30 秒 |
-| 任一额度剩余不超过 10% | 15 秒 |
+| Field Name | Required | Description |
+| :--- | :--- | :--- |
+| `access_token` | **Yes** | Primary bearer token for quota and subscription APIs (JWT format) |
+| `refresh_token` | **Recommended** | Used to automatically rotate and renew the `access_token` in the background |
 
-切回应用前台会立即刷新，也可以点击右上角刷新按钮手动更新。
+5. Paste the copied values into Kimi Pocket's Settings panel and save.
 
-## 本地开发
+> [!WARNING]
+> Your tokens grant access to your account. Keep them secure and never share them in public screenshots or issue trackers.
 
-环境要求：Node.js 20、npm；构建 Android 时另需 JDK 21 与 Android SDK 35。
+---
+
+## Refresh Strategy
+
+The polling engine automatically regulates its heartbeat according to the **lowest remaining percentage** among all three quota categories:
+
+| Quota Status | Polling Interval | Visual Theme / State | Trigger Threshold |
+| :--- | :--- | :--- | :--- |
+| **Normal** | 60 seconds | Emerald Green (`#10B981`) / Normal Icon | All quotas remaining > 30% |
+| **Warning** | 30 seconds | Amber Yellow (`#F59E0B`) / Alert Badge | Any quota remaining ≤ 30% |
+| **Critical** | 15 seconds | Crimson Red (`#EF4444`) / High Priority | Any quota remaining ≤ 10% |
+
+- **Lifecycle Aware**: Polling automatically sleeps when the window minimizes or the screen turns off, saving battery. When foregrounded, an immediate refresh triggers.
+- **Error Handling**: On HTTP 401 (token expired/invalid), polling halts gracefully with a clear notification; network drops retain the cached snapshot with an offline status label.
+
+---
+
+## Development & Build
+
+### Clone Repository
 
 ```bash
 git clone https://github.com/yangguan-xue/Kimi-Pocket.git
 cd Kimi-Pocket
+```
+
+### 1. Web & Android (React 19 + Capacitor 7)
+
+- **Prerequisites**: Node.js 20+, npm; Android builds require JDK 21 and Android SDK Platform 35.
+
+```bash
+# Install dependencies
 npm ci
+
+# Start local dev server (includes /apiv2 proxy)
 npm run dev
-```
 
-常用命令：
+# Run unit tests
+npm test
+
+# Build production Web / PWA assets
+npm run build
+
+# Sync assets to Capacitor native Android project
+npm run build:android
+
+# Compile Android Debug APK
+cd android && ./gradlew assembleDebug
+```
+Output path: `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+### 2. macOS Menubar App (Swift 6 + SwiftUI)
+
+- **Prerequisites**: macOS 14+, Xcode 16+ or standalone Command Line Tools (Swift 6.0+).
 
 ```bash
-npm test              # 运行单元测试
-npm run build         # 类型检查并构建 Web / PWA
-npm run build:android # 构建前端并同步 Capacitor 原生工程
+# Navigate to macOS project directory
+cd macos
+
+# Run unit tests
+swift test
+
+# Build and package DMG / ZIP distributions
+bash ../scripts/build-macos.sh
+```
+Output path: `dist-macos/KimiPocket-v{VERSION}-macOS.dmg` and `.zip`.
+
+### 3. Windows System Tray App (.NET 10 + WPF)
+
+- **Prerequisites**: Windows 11 x64, .NET 10 SDK.
+
+```powershell
+# Run unit tests and formatting checks
+dotnet test windows/KimiPocket.sln --configuration Release
+
+# Build self-contained portable ZIP package (with embedded runtime)
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-windows.ps1
+```
+Output path: `dist-windows/Kimi-Pocket-windows-x64-{VERSION}.zip`.
+
+---
+
+## Project Structure
+
+```text
+kimi-pocket/
+├── android/            # Capacitor native Android app and Gradle configs
+├── macos/              # macOS native project (Swift 6 + SwiftUI + AppKit)
+│   ├── Sources/App/    # Status item, hover HUD, and controllers
+│   └── Sources/Core/   # Quota data models, Keychain storage, HTTP client
+├── windows/            # Windows native project (.NET + WPF)
+│   ├── src/            # Tray icon, WPF panel, and Credential Manager
+│   └── tests/          # Unit tests and layout integration tests
+├── src/                # Web / Android frontend source (React 19 + TS)
+│   ├── components/     # Segmented card and 3-ring HUD components
+│   ├── services/       # Official Moonshot API protocol contracts
+│   └── hooks/          # Dynamic polling and state machine hooks
+├── specs/              # Specification-Driven Development (SDD) design docs
+├── scripts/            # Multi-platform packaging and CI automation scripts
+└── tasks/              # Phased task tracking cards and implementation notes
 ```
 
-构建 Debug APK：
+---
 
-```bash
-cd android
-./gradlew assembleDebug
-```
+## Engineering Standards
 
-产物位于 `android/app/build/outputs/apk/debug/app-debug.apk`。
+- **Specification-Driven Development (SDD)**: All architectural designs, schema alterations, and platform ports are driven strictly by contract specifications under `specs/`. No implementation precedes a specification.
+- **Type Safety & Testing**: Strict TypeScript compilation (`strict: true`, zero `any`), comprehensive Vitest suites for core mathematical calculations, and native platform unit tests.
+- **Conventional Commits**: Commit messages follow the Conventional Commits specification (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`).
 
-## 技术栈
+---
 
-React 19 · TypeScript · Vite 6 · Tailwind CSS · Capacitor 7 · vite-plugin-pwa · Vitest
+## Acknowledgements
 
-## 致谢
+- [nekocharm1207/kimi-island](https://github.com/nekocharm1207/kimi-island): Valuable protocol analysis and design inspiration.
+- [Capacitor](https://capacitorjs.com/): Cross-platform native runtime for mobile.
+- [Tailwind CSS](https://tailwindcss.com/) & [Lucide Icons](https://lucide.dev/): Design system and icon assets.
 
-- [nekocharm1207/kimi-island](https://github.com/nekocharm1207/kimi-island)：协议解析与设计思路的重要参考。
-- [Capacitor](https://capacitorjs.com/)：跨平台原生应用运行时。
-- [Tailwind CSS](https://tailwindcss.com/) 与 [Lucide](https://lucide.dev/)：界面样式与图标。
+---
 
-## 许可证
+## License
 
-基于 [MIT License](LICENSE) 开源。
-
-## macOS 原生状态栏端
-
-[下载 macOS v0.2.0 发布版](https://github.com/yangguan-xue/Kimi-Pocket/releases/tag/macos-v0.2.0)（适用于 Apple Silicon macOS 14+）。提供 DMG 镜像与 ZIP 便携包。
-
-基于 Swift 6 + SwiftUI + AppKit 打造的系统级状态栏轻量常驻工具。鼠标悬停顶栏 ✨ 图标（>180ms）即刻平滑展开 Obsidian Dark 毛玻璃浮窗，移开即自动淡出收起，纯即时无感交互；支持 5小时、周用量与套餐到期时间精准监控，集成三级色彩动态预警与系统钥匙串（Keychain）硬件安全存储。
-
-## Windows 原生托盘端
-
-[下载 Windows v0.1.0 预览版](https://github.com/yangguan-xue/Kimi-Pocket/releases/tag/windows-v0.1.0)（Windows 11 x64，解压运行，无需单独安装 .NET）。
-
-首版现已提供 WPF 原生工程。按已确认的示意图实现黑灰白实色面板：悬浮查看 5 小时、本周、套餐总剩余额度，支持安全保存 Token、自动刷新和托盘设置。
-
-在 Windows 上运行 `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-windows.ps1` 生成自带运行时的便携 ZIP。下载包使用、开发命令与验证范围见 [Windows 使用说明](windows/README.md)；构建及实测证据见 [Phase 6](tasks/phase-6-windows-tray/evidence/README.md)。
+This project is licensed under the [MIT License](LICENSE).
